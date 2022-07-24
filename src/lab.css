@@ -6,6 +6,7 @@ html {
 
 nav {
   @apply flex pb-3;
+  flex-shrink: 0;
   overflow-x: auto;
   overflow-y: visible;
 }
@@ -17,52 +18,97 @@ nav button {
   white-space: nowrap;
   overflow: hidden;
   outline: none;
+  top: 0px;
+  transition: top 80ms ease-out;
 }
+
 nav button:not(.active):hover {
   top: 8px;
 }
 
 /* Layout */
-h1 {
+#lab {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+#lab > h1 {
   @apply mx-8;
 }
 
 main {
-  @apply mx-8 flex gap-6 flex-wrap;
+  @apply flex gap-6 flex-grow items-stretch;
+  overflow: hidden;
 }
 
 article {
-  @apply flex-grow;
+  @apply flex-grow pl-8 pr-4;
   flex-basis: 60ch;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
 }
 
 aside {
-  @apply flex-grow;
+  @apply flex-grow pl-4 pr-8;
   flex-basis: 36ch;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
 }
 
-@media (max-width: 720px) {
-  h1 {
-    @apply mx-3;
+@media (max-width: 1080px) {
+  #lab {
+    overflow: auto;
+    height: auto;
+  }
+
+  #lab > h1 {
+    @apply mx-4;
   }
 
   main {
-    @apply mx-3;
+    @apply flex-wrap;
   }
 
-  .experiment {
+  article {
+    @apply px-4;
+    max-height: none;
   }
 
-  .notes {
+  aside {
+    @apply px-4;
+    max-height: none;
   }
+}
+
+.operations-list {
+  list-style: none;
+}
+
+.operations-list li {
+  @apply flex gap-3 flex-wrap;
+}
+
+.operations-list li > * {
+  @apply flex-1;
+}
+.operations-list li > *.flex-none {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
 }
 
 /* Buttons */
 button,
 input,
 select,
+option,
 .clickable,
 *[contenteditable="true"] {
+  @apply bg-paper;
   transition: outline-width 80ms ease-out, outline-offset 80ms ease-out;
 }
 

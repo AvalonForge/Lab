@@ -1,13 +1,10 @@
 <template lang="html">
-  <div class="">
-    <h1>Avalon Lab Experiment: Guerilla Documents</h1>
-    <main>
-      <article class="">
-        <Document :azimuth="id" :ref="id" :key="id" v-for="id in ids" />
-      </article>
-      <Notes :documents="documents" :ids="ids" />
-    </main>
-  </div>
+  <main>
+    <article class="">
+      <Document :azimuth="id" :ref="id" :key="id" v-for="id in ids" />
+    </article>
+    <Notes :documents="documents" :ids="ids" />
+  </main>
 </template>
 
 <script lang="ts">

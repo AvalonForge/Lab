@@ -30,18 +30,18 @@
   scrollbar-width: none; /* Firefox */
 }
 
-.scrollbar-sm::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 /* Track */
-.scrollbar-sm::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   @apply bg-paper;
 }
 
 /* Handle */
-.scrollbar-sm::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   @apply bg-type rounded-1;
 }
 

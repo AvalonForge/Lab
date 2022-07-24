@@ -4,22 +4,13 @@ module.exports = {
     colors: {
       /* App */
       none: "#FDFCFA00",
+      avalon: "#E2DCC9",
+      warning: "#CCB627",
       type: "#262626",
       "type-glass": "#26262620",
       paper: "#FDFCFA",
-      "paper-glass": "#FDFCFA",
-      "off-white": "#E2DCC9",
-      glass: "#FDFCFA33",
-
-      //utility
-      red: "#DC2626",
-      "light-red": "#E3BFBF",
-      green: "#16A34A",
-      "light-green": "#BBD8C6",
-      blue: "#0EA5E9",
-      "light-blue": "#BAD8E6",
-      amber: "#F59E0B",
-      "light-amber": "#FDECCE",
+      "paper-glass": "#FDFCFA33",
+      "off-white": "#F5F4F0",
     },
     fontFamily: {
       sans: "Montserrat, sans-serif",

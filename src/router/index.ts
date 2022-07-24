@@ -18,6 +18,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Root",
     component: () => import("@/views/Root.vue"),
+    meta: {
+      dev: false,
+    },
   },
   /*
   {
@@ -30,21 +33,33 @@ const routes: Array<RouteRecordRaw> = [
     path: "/perlin-noise",
     name: "Perlin Noise",
     component: () => import("@/views/PerlinNoise.vue"),
+    meta: {
+      dev: true,
+    },
   },
   {
     path: "/inline-notes",
     name: "Inline Notes",
     component: () => import("@/views/InlineNotes.vue"),
+    meta: {
+      dev: true,
+    },
   },
   {
     path: "/typescale",
     name: "Typescale",
     component: () => import("@/views/Typescale.vue"),
+    meta: {
+      dev: true,
+    },
   },
   {
     path: "/guerilla-documents",
     name: "Guerilla Documents",
     component: () => import("@/views/Guerilla.vue"),
+    meta: {
+      dev: true,
+    },
   },
 ];
 

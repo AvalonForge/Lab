@@ -1,10 +1,10 @@
 <template lang="html">
   <aside class="">
     <h3>Soundboard</h3>
-    <ul class="list-none">
+    <ul class="operations-list">
       <li class="flex gap-4">
         Pull from:
-        <select class="flex-1" v-model="pullFrom">
+        <select class="" v-model="pullFrom">
           <option :value="''"></option>
           <option
             :key="id"
@@ -15,7 +15,7 @@
           </option>
         </select>
         into:
-        <select class="flex-1" v-model="pullInto">
+        <select class="" v-model="pullInto">
           <option :value="''"></option>
           <option
             :key="id"
@@ -25,21 +25,34 @@
             {{ id }}
           </option>
         </select>
-        <button type="button" @click="pullFromTo(pullFrom, pullInto)">
+        <button
+          type="button"
+          @click="pullFromTo(pullFrom, pullInto)"
+          class="flex-none"
+        >
           execute
         </button>
       </li>
+      <li class="">
+        <ul class="operations-list flex-grow" v-for="id in ids" :key="id">
+          <li class="bold border-b border-type">
+            {{ id }}
+          </li>
+          <li>
+            <button type="button" @click="logDoc(id)">log doc</button>
+          </li>
+          <li>
+            <button type="button" @click="logView(id)">log view</button>
+          </li>
+          <li>
+            <button type="button" @click="logStateVector(id)">
+              log state vector
+            </button>
+          </li>
+        </ul>
+      </li>
     </ul>
-    <div class="flex gap-4">
-      <div class="flex flex-col gap-3 flex-grow" v-for="id in ids" :key="id">
-        <strong class="border-b border-type">{{ id }}</strong>
-        <button type="button" @click="logDoc(id)">log doc</button>
-        <button type="button" @click="logView(id)">log view</button>
-        <button type="button" @click="logStateVector(id)">
-          log state vector
-        </button>
-      </div>
-    </div>
+
     <h3>Notes</h3>
     <p>This is a test of our "geurilla document" system.</p>
     <p>
