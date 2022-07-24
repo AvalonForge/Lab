@@ -1,5 +1,5 @@
 {
-  "name": "velocity-lab",
+  "name": "avalon-lab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -28,6 +28,7 @@
     "vue-router": "^4.0.16",
     "vuex": "^4.0.0-0",
     "y-prosemirror": "^1.1.2",
+    "y-protocols": "^1.0.5",
     "yjs": "^13.5.40"
   },
   "devDependencies": {
