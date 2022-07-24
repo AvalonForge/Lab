@@ -55,7 +55,7 @@
 
     <h3>Notes</h3>
     <p>
-      This is a test of the Y-js CRDT document as a solution for a distributed
+      This is a test of the Y-js Xml CRDT as a solution for a distributed
       document system.
     </p>
     <p>
