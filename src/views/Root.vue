@@ -1,23 +1,33 @@
 <template lang="html">
-  <div>
-    <h1 class="heading">Welcome to the Avalon Lab</h1>
-    <main>
+  <main>
+    <article class="">
       <ul class="operations-list">
         <li><s>06.14.22 Multiplayer</s></li>
         <li>
-          <router-link to="/perlin-noise">06.29.22 Perlin Noise</router-link>
+          <s>06.29.22 Perlin Noise</s>
         </li>
         <li>
-          <router-link to="/inline-notes">06.24.22 Inline Notes</router-link>
+          <s to="/inline-notes">06.24.22 Inline Notes</s>
         </li>
-        <li><router-link to="/typescale">06.--.22 Typescale</router-link></li>
+        <li>
+          <router-link to="/typescale"> 07.18.22 Typescale </router-link>
+        </li>
+        <li>
+          <router-link to="/guerilla-documents">
+            07.25.22 crdt-documents
+          </router-link>
+        </li>
       </ul>
-    </main>
-  </div>
+    </article>
+  </main>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "Root",
+});
 </script>
 
 <style lang="css" scoped>

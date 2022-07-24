@@ -3,36 +3,12 @@
     <router-link to="/">
       <button type="button" :class="{ active: route == '/' }">index</button>
     </router-link>
-    <router-link to="/perlin-noise">
-      <button type="button" :class="{ active: route == '/perlin-noise' }">
-        live
-      </button>
+    <router-link :to="live">
+      <button type="button" :class="{ active: route == live }">live</button>
     </router-link>
-    <!--
-    <router-link to="/multiplayer">
-      <button type="button" :class="{ active: route == '/multiplayer' }">
-        multiplayer
-      </button>
-    </router-link>
-  -->
-    <router-link to="/perlin-noise">
-      <button type="button" :class="{ active: route == '/perlin-noise' }">
-        perlin noise
-      </button>
-    </router-link>
-    <router-link to="/inline-notes">
-      <button type="button" :class="{ active: route == '/inline-notes' }">
-        inline notes
-      </button>
-    </router-link>
-    <router-link to="/typescale">
-      <button type="button" :class="{ active: route == '/typescale' }">
-        typescale
-      </button>
-    </router-link>
-    <router-link to="/guerilla-documents">
-      <button type="button" :class="{ active: route == '/guerilla-documents' }">
-        guerilla-documents
+    <router-link :to="`/${path}`" :key="path" v-for="path in experiments">
+      <button type="button" :class="{ active: route == `/${path}` }">
+        {{ path }}
       </button>
     </router-link>
   </nav>
@@ -42,9 +18,25 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "Navbar",
+  data() {
+    return {
+      live: "",
+    };
+  },
+  mounted: function () {
+    this.$router.getRoutes().forEach((route) => {
+      if (route.meta.live) this.live = route.path;
+    });
+  },
   computed: {
     route: function (): string {
       return this.$route.path;
+    },
+    experiments: function (): Array<string> {
+      return this.$router
+        .getRoutes()
+        .map((route) => route.path.replace(/\//, ""))
+        .filter((route: string) => route);
     },
   },
 });

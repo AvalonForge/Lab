@@ -35,7 +35,7 @@
       </li>
       <li class="">
         <ul class="operations-list flex-grow" v-for="id in ids" :key="id">
-          <li class="bold border-b border-type">
+          <li class="font-bold border-b border-type">
             {{ id }}
           </li>
           <li>
@@ -54,7 +54,10 @@
     </ul>
 
     <h3>Notes</h3>
-    <p>This is a test of our "geurilla document" system.</p>
+    <p>
+      This is a test of the Y-js CRDT document as a solution for a distributed
+      document system.
+    </p>
     <p>
       <strong>Characteristics:</strong>
     </p>

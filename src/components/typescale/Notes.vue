@@ -1,5 +1,7 @@
 <template lang="html">
-  <aside class="">notes</aside>
+  <aside class="">
+    <p>tbh pretty happy with this as is</p>
+  </aside>
 </template>
 
 <script>

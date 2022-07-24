@@ -10,8 +10,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Notes from "@/components/guerilla-documents/Notes.vue";
-import Document from "@/components/guerilla-documents/Document.vue";
+import Notes from "@/components/crdt-documents/Notes.vue";
+import Document from "@/components/crdt-documents/Document.vue";
 
 export default defineComponent({
   name: "Guerilla Documents",

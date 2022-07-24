@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="lab">
     <Navbar />
-    <h1 class="mx-8">{{ title }}</h1>
+    <h1 class="">{{ title }}</h1>
     <router-view />
     <div class="text-h1 mt-after" :class="{ dev: dev }">
       <div class="in-dev">IN DEVELOPMENT</div>

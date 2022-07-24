@@ -28,7 +28,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "Multiplayer",
     component: () => import("@/views/Multiplayer.vue"),
   },
-  */
   {
     path: "/perlin-noise",
     name: "Perlin Noise",
@@ -45,6 +44,7 @@ const routes: Array<RouteRecordRaw> = [
       dev: true,
     },
   },
+  */
   {
     path: "/typescale",
     name: "Typescale",
@@ -54,11 +54,12 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/guerilla-documents",
-    name: "Guerilla Documents",
-    component: () => import("@/views/Guerilla.vue"),
+    path: "/crdt-documents",
+    name: "CRDT Documents",
+    component: () => import("@/views/CRDT-Documents.vue"),
     meta: {
       dev: true,
+      live: true,
     },
   },
 ];
