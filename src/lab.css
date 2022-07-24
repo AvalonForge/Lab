@@ -1,0 +1,53 @@
+html {
+  font-size: 18px;
+  font-family: "IBM PLex Mono", "mono";
+}
+
+button {
+  @apply border border-charcoal p-mention;
+}
+
+button:hover {
+  @apply shadow-lab;
+}
+
+button:active {
+  @apply shadow-lab-inset;
+}
+
+.clickable:hover {
+  @apply shadow-lab;
+}
+.clickable:active {
+  @apply shadow-lab-inset;
+}
+
+.heading {
+  @apply mx-12 text-h3;
+}
+.to-velocity {
+  @apply mx-12 text-base font-btn;
+  text-decoration: none;
+}
+
+.mx-page {
+  margin: 0 12px;
+}
+.editor-padding {
+  padding: 0 calc(12px);
+}
+
+@media (min-width: 600px) {
+  .heading {
+    @apply mx-85 text-h1 flex-grow text-left;
+  }
+  .to-velocity {
+    @apply mx-85 text-h3;
+  }
+  .mx-page {
+    margin: 0 85px;
+  }
+  .editor-padding {
+    padding: 0 calc(85px - 18px);
+  }
+}

@@ -1,0 +1,171 @@
+.ProseMirror {
+  @apply outline-none py-cell;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+/* Notes and Collections */
+/* Note */
+section {
+  @apply flex-1;
+  flex-basis: 15ch;
+  box-shadow: 0px 4px 8px 0px #26262633;
+  /*  border: 2px solid #262626; */
+  border-radius: 5px;
+}
+
+article {
+  @apply flex flex-wrap gap-12;
+}
+
+/* Node Selection */
+.ProseMirror .node-selected {
+  @apply bg-cool;
+}
+
+/* Drag Handler */
+
+.ProseMirror p,
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror ol,
+.ProseMirror ul,
+.ProseMirror pre,
+.ProseMirror section,
+.ProseMirror div.toggle {
+  /* Padding for the drag handle + the dropzone */
+  position: relative;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.ProseMirror p::before,
+.ProseMirror li:nth-child(n + 2)::before,
+.ProseMirror h1::before,
+.ProseMirror h2::before,
+.ProseMirror h3::before,
+.ProseMirror ol::before,
+.ProseMirror ul::before,
+.ProseMirror pre::before,
+.ProseMirror section::before,
+.ProseMirror div.toggle::before {
+  /* The actual drag handle */
+  @apply hover:bg-warm rounded-mention;
+  content: "";
+  flex: 0 0 auto;
+  position: absolute;
+  opacity: 0;
+  left: 0;
+  z-index: 4;
+  width: 18px;
+  height: 18px;
+  top: 4.5px;
+  cursor: grab;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16"><path fill-opacity="0.2" d="M4 14c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM2 6C.9 6 0 6.9 0 8s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6C.9 0 0 .9 0 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.ProseMirror li:nth-child(n + 2)::before {
+  left: -18px;
+}
+
+.ProseMirror pre::before {
+  /* Code blocks need the drag handler within themselves */
+  top: calc(0.66em + 4.5px);
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16"><path fill="white" fill-opacity="1" d="M4 14c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM2 6C.9 6 0 6.9 0 8s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6C.9 0 0 .9 0 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+p:hover::before,
+li:nth-child(n + 2):hover::before,
+h1:hover::before,
+h2:hover::before,
+h3:hover::before,
+ol:hover::before,
+ul:hover::before,
+pre:hover::before,
+section:hover::before,
+div.toggle:hover::before {
+  /* Show when hovering */
+  opacity: 1;
+}
+
+/* Lists */
+
+li p {
+  display: inline;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+li p:before {
+  content: none !important;
+}
+
+/* Toggle */
+.ProseMirror .toggle input {
+  @apply bg-paper hover:bg-warm;
+  border-radius: 1px;
+  appearance: none;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 2.5px;
+  left: 68px;
+}
+
+.ProseMirror .toggle input:before {
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  opacity: 1;
+  top: 0;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z" /></svg>');
+}
+
+.ProseMirror .toggle p,
+.ProseMirror .toggle h1,
+.ProseMirror .toggle h2,
+.ProseMirror .toggle h3,
+.ProseMirror .toggle ol,
+.ProseMirror .toggle ul,
+.ProseMirror .toggle div.toggle {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+.ProseMirror .toggle p::before,
+.ProseMirror .toggle h1::before,
+.ProseMirror .toggle h2::before,
+.ProseMirror .toggle h3::before,
+.ProseMirror .toggle ol::before,
+.ProseMirror .toggle ul::before,
+.ProseMirror .toggle div.toggle::before {
+  left: 0;
+}
+
+.ProseMirror .toggle input:checked:before {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M118.6 105.4l128 127.1C252.9 239.6 256 247.8 256 255.1s-3.125 16.38-9.375 22.63l-128 127.1c-9.156 9.156-22.91 11.9-34.88 6.943S64 396.9 64 383.1V128c0-12.94 7.781-24.62 19.75-29.58S109.5 96.23 118.6 105.4z" /></svg>');
+}
+
+.ProseMirror .toggle input:checked + div *:nth-child(n + 2) {
+  display: none;
+}
+
+.ProseMirror .toggle > div > p:first-child {
+  padding-left: 0;
+  margin-left: 18px;
+}
+
+.ProseMirror .toggle > div > p:first-child::before {
+  display: none !important;
+}

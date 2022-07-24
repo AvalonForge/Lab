@@ -1,0 +1,72 @@
+/* Defaults ----------------------------------------------------------------- */
+html {
+  @apply bg-paper;
+  font-size: 18px;
+}
+
+/* Spacing */
+p,
+h1,
+h2,
+h3,
+ul,
+ol,
+blockquote,
+article {
+  margin-top: 1em;
+  margin-bottom: 0.68em;
+}
+
+pre {
+  padding-top: 1em;
+  padding-bottom: 0.68em;
+}
+
+li p,
+ul ul,
+ul ol {
+  margin: 0;
+}
+
+/* Styling */
+h1 {
+  @apply text-h1 tracking-heading leading-heading font-bold;
+}
+
+h2 {
+  @apply text-h2 tracking-heading leading-heading font-bold;
+}
+
+h3 {
+  @apply text-h3 tracking-heading leading-heading font-bold;
+}
+
+strong,
+b {
+  @apply font-semibold;
+}
+
+ul li {
+  position: relative;
+  list-style: disc;
+  list-style-position: inside;
+}
+
+ol li {
+  position: relative;
+  list-style: decimal;
+  list-style-position: inside;
+}
+
+a {
+  @apply text-blue hover:underline cursor-pointer;
+}
+
+blockquote {
+  @apply border-l border-charcoal;
+  @apply pl-12;
+}
+
+pre {
+  @apply bg-charcoal text-paper rounded-mention;
+}
