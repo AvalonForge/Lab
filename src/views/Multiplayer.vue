@@ -25,11 +25,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.caution {
-  background-image: url("../assets/caution.svg");
-  background-position: center;
-  height: 50px;
-  width: 100vw;
-}
-</style>
+<style scoped></style>

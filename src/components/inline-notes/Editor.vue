@@ -47,4 +47,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+@import "../../prosemirror.css";
+</style>

@@ -1,53 +1,106 @@
+/* Root */
 html {
-  font-size: 18px;
+  font-size: 1.125em;
   font-family: "IBM PLex Mono", "mono";
 }
 
-button {
-  @apply border border-charcoal p-mention;
+nav {
+  @apply flex pb-3;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+nav button {
+  @apply border border-type bg-paper;
+  margin-left: -1px;
+  position: relative;
+  box-shadow: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+}
+nav button:not(.active):hover {
+  top: 8px;
 }
 
-button:hover {
-  @apply shadow-lab;
+/* Layout */
+h1 {
+  @apply mx-8;
 }
 
-button:active {
-  @apply shadow-lab-inset;
+main {
+  @apply mx-8 flex gap-6 flex-wrap;
 }
 
+article {
+  @apply flex-grow;
+  flex-basis: 60ch;
+}
+
+aside {
+  @apply flex-grow;
+  flex-basis: 36ch;
+}
+
+@media (max-width: 720px) {
+  h1 {
+    @apply mx-3;
+  }
+
+  main {
+    @apply mx-3;
+  }
+
+  .experiment {
+  }
+
+  .notes {
+  }
+}
+
+/* Buttons */
+button,
+input,
+select,
+.clickable,
+*[contenteditable="true"] {
+  transition: outline-width 80ms ease-out, outline-offset 80ms ease-out;
+}
+
+button,
+input,
+select,
+.clickable {
+  @apply py-1 px-2;
+  outline: solid 1px #262626;
+}
+
+button:hover,
+input:hover,
+select:hover,
 .clickable:hover {
   @apply shadow-lab;
 }
+
+button:active,
+select:active,
 .clickable:active {
   @apply shadow-lab-inset;
 }
 
-.heading {
-  @apply mx-12 text-h3;
-}
-.to-velocity {
-  @apply mx-12 text-base font-btn;
-  text-decoration: none;
+input,
+*[contenteditable="true"] {
+  outline: 1px solid #262626;
+  outline-offset: 0px;
 }
 
-.mx-page {
-  margin: 0 12px;
-}
-.editor-padding {
-  padding: 0 calc(12px);
+input,
+*[contenteditable="true"]:hover {
+  outline: 1px solid #262626;
+  outline-offset: 2px;
 }
 
-@media (min-width: 600px) {
-  .heading {
-    @apply mx-85 text-h1 flex-grow text-left;
-  }
-  .to-velocity {
-    @apply mx-85 text-h3;
-  }
-  .mx-page {
-    margin: 0 85px;
-  }
-  .editor-padding {
-    padding: 0 calc(85px - 18px);
-  }
+input,
+*[contenteditable="true"]:focus {
+  outline: 2px solid #262626;
+  outline-offset: 2px;
 }

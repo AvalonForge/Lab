@@ -15,7 +15,7 @@
         </p>
         <p>
           If you like what you see, consider signing up for early access for our
-          <a class="text-charcoal" href="https://www.tryvelocity.xyz"
+          <a class="text-type" href="https://www.tryvelocity.xyz"
             ><strong>complete workspace</strong></a
           >
           which includes tools for managing email, relationships, and more! --
@@ -33,7 +33,7 @@
       </article>
     </div>
     <p>
-      <a class="text-charcoal" @click="letter = true"
+      <a class="text-type" @click="letter = true"
         ><strong class="u">Welcome Letter 💌</strong></a
       >
     </p>
@@ -240,7 +240,7 @@ export default defineComponent({
 
 <style lang="css" scoped>
 .welcome-letter {
-  @apply bg-cool flex items-center justify-center font-sans;
+  @apply flex items-center justify-center font-sans;
   position: fixed;
   top: 0;
   left: 0;

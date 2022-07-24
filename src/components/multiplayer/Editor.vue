@@ -210,7 +210,7 @@ export default defineComponent({
 }
 
 .placeholder::before {
-  @apply text-charcoal-ghost text-base;
+  @apply text-type-glass text-body;
   content: "Starting typing to begin...";
   position: absolute;
   left: 18px;
@@ -219,7 +219,7 @@ export default defineComponent({
 
 @media (min-width: 600px) {
   .placeholder::before {
-    @apply text-charcoal-ghost text-h2 tracking-heading leading-heading;
+    @apply text-type-glass text-h2;
     position: absolute;
     content: "Starting typing to begin...";
     left: 18px;

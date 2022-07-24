@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="flex">
+  <nav>
     <router-link to="/">
       <button type="button" :class="{ active: route == '/' }">index</button>
     </router-link>
@@ -8,11 +8,13 @@
         live
       </button>
     </router-link>
+    <!--
     <router-link to="/multiplayer">
       <button type="button" :class="{ active: route == '/multiplayer' }">
         multiplayer
       </button>
     </router-link>
+  -->
     <router-link to="/perlin-noise">
       <button type="button" :class="{ active: route == '/perlin-noise' }">
         perlin noise
@@ -28,7 +30,12 @@
         typescale
       </button>
     </router-link>
-  </div>
+    <router-link to="/guerilla-documents">
+      <button type="button" :class="{ active: route == '/guerilla-documents' }">
+        guerilla-documents
+      </button>
+    </router-link>
+  </nav>
 </template>
 
 <script lang="ts">
@@ -45,7 +52,7 @@ export default defineComponent({
 
 <style lang="css" scoped>
 button {
-  @apply text-charcoal;
+  @apply text-type;
 }
 
 .active {

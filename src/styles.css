@@ -20,47 +20,6 @@
 
 /* Toggle */
 
-/* Buttons */
-
-.btn-primary {
-  @apply bg-primary-accent text-paper cursor-pointer;
-  transition: box-shadow 0.2s ease-out;
-}
-
-.btn-primary:hover {
-  @apply shadow-primary;
-}
-
-.btn-primary:active {
-  @apply shadow-primary-inset;
-}
-
-.btn-primary-outline {
-  @apply bg-paper text-primary-accent border-2 border-primary-accent cursor-pointer;
-  transition: background-color 0.2s ease-out;
-}
-
-.btn-primary-outline:hover {
-  @apply bg-primary-ghost;
-}
-
-.btn-primary-outline:active {
-  @apply bg-primary-accent text-paper shadow-primary-inset;
-}
-
-.btn-danger-outline {
-  @apply bg-paper text-red border-2 border-red cursor-pointer;
-  transition: background-color 0.2s ease-out;
-}
-
-.btn-danger-outline:hover {
-  @apply bg-light-red;
-}
-
-.btn-danger-outline:active {
-  @apply bg-red text-paper shadow-danger-inset;
-}
-
 /* Scrollbars */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
@@ -83,88 +42,10 @@
 
 /* Handle */
 .scrollbar-sm::-webkit-scrollbar-thumb {
-  @apply bg-charcoal rounded-mention;
-}
-
-/* Context Menu */
-.context-menu {
-  @apply bg-paper shadow-base rounded-sub flex flex-col overflow-hidden outline-none overflow-y-auto scrollbar-sm;
-  width: 240px;
-  max-height: 200px;
-}
-
-.menu-heading {
-  @apply font-bold bg-cool w-full p-mention flex gap-mention items-center;
-}
-
-.menu-item {
-  @apply w-full p-mention flex flex-row flex-nowrap gap-3 items-center whitespace-nowrap mention;
-}
-
-.menu-heading-icon {
-  @apply flex flex-row flex-nowrap items-center justify-center;
-  width: 18px;
-  height: 18px;
-}
-
-/* Display */
-.display {
-  @apply bg-paper shadow-base rounded-mention;
+  @apply bg-type rounded-1;
 }
 
 /* Utilities ---------------------------------------------------------------- */
 .ellipsis {
   @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
-}
-
-.clickable {
-  @apply hover:bg-warm focus:bg-cool cursor-pointer;
-}
-
-input.clickable {
-  @apply cursor-text;
-}
-
-/* Loading */
-
-.loading-animation {
-  background: rgba(26, 26, 26, 0.05);
-  animation: loading 0.6s ease-in-out 1s infinite alternate;
-}
-
-.loading-animation-dark {
-  background: rgba(255, 255, 255, 0.05);
-  animation: loading 1s ease-in-out 1s infinite alternate;
-}
-
-@keyframes loading {
-  from {
-    background: rgba(26, 26, 26, 0.05);
-  }
-  to {
-    background: rgba(26, 26, 26, 0.1);
-  }
-}
-
-@keyframes loading-dark {
-  from {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  to {
-    background: rgba(255, 255, 255, 0.2);
-  }
-}
-
-.flash-animation {
-  opacity: 1;
-  animation: flash 1s ease-in-out 1s infinite alternate;
-}
-
-@keyframes flash {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.6;
-  }
 }

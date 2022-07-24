@@ -1,3 +1,1 @@
-# velocity-lab
-
-a UX research lab
+# The Avalon UX research lab

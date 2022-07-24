@@ -19,11 +19,13 @@ const routes: Array<RouteRecordRaw> = [
     name: "Root",
     component: () => import("@/views/Root.vue"),
   },
+  /*
   {
     path: "/multiplayer",
     name: "Multiplayer",
     component: () => import("@/views/Multiplayer.vue"),
   },
+  */
   {
     path: "/perlin-noise",
     name: "Perlin Noise",
@@ -38,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/typescale",
     name: "Typescale",
     component: () => import("@/views/Typescale.vue"),
+  },
+  {
+    path: "/guerilla-documents",
+    name: "Guerilla Documents",
+    component: () => import("@/views/Guerilla.vue"),
   },
 ];
 

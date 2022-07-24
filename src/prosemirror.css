@@ -1,7 +1,6 @@
 .ProseMirror {
-  @apply outline-none py-cell;
-  overflow-wrap: break-word;
-  word-break: break-all;
+  @apply outline-none py-3;
+  white-space: pre-wrap;
 }
 
 /* Notes and Collections */
@@ -14,13 +13,13 @@ section {
   border-radius: 5px;
 }
 
-article {
-  @apply flex flex-wrap gap-12;
+.ProseMirror article {
+  @apply flex flex-wrap gap-4;
 }
 
 /* Node Selection */
 .ProseMirror .node-selected {
-  @apply bg-cool;
+  @apply bg-off-white;
 }
 
 /* Drag Handler */
@@ -51,7 +50,7 @@ article {
 .ProseMirror section::before,
 .ProseMirror div.toggle::before {
   /* The actual drag handle */
-  @apply hover:bg-warm rounded-mention;
+  @apply hover:bg-type-glass rounded-1;
   content: "";
   flex: 0 0 auto;
   position: absolute;
@@ -109,7 +108,7 @@ li p:before {
 
 /* Toggle */
 .ProseMirror .toggle input {
-  @apply bg-paper hover:bg-warm;
+  @apply bg-paper hover:bg-type-glass;
   border-radius: 1px;
   appearance: none;
   position: absolute;

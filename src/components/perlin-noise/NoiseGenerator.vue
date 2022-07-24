@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="flex flex-wrap gap-50 justify-center">
+  <main class="flex flex-wrap gap-50 justify-center">
     <canvas
       :width="artboardSize"
       :height="artboardSize"
@@ -201,7 +201,7 @@
         />
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">

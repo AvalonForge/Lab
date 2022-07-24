@@ -11,10 +11,8 @@ h2,
 h3,
 ul,
 ol,
-blockquote,
-article {
-  margin-top: 1em;
-  margin-bottom: 0.68em;
+blockquote {
+  @apply mt-before mb-after;
 }
 
 pre {
@@ -30,15 +28,15 @@ ul ol {
 
 /* Styling */
 h1 {
-  @apply text-h1 tracking-heading leading-heading font-bold;
+  @apply text-h1 font-bold;
 }
 
 h2 {
-  @apply text-h2 tracking-heading leading-heading font-bold;
+  @apply text-h2 font-bold;
 }
 
 h3 {
-  @apply text-h3 tracking-heading leading-heading font-bold;
+  @apply text-h3 font-bold;
 }
 
 strong,
@@ -63,10 +61,10 @@ a {
 }
 
 blockquote {
-  @apply border-l border-charcoal;
-  @apply pl-12;
+  @apply border-l border-type;
+  @apply pl-3;
 }
 
 pre {
-  @apply bg-charcoal text-paper rounded-mention;
+  @apply bg-type  text-paper rounded-1;
 }
