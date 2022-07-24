@@ -3,7 +3,6 @@ import { EditorState } from "prosemirror-state";
 import { Schema } from "prosemirror-model";
 import schema from "./schema";
 import {
-  Command,
   chainCommands,
   newlineInCode,
   createParagraphNear,
@@ -55,10 +54,10 @@ export default function buildKeymap(
   schema: Schema,
   mapKeys?: { [key: string]: false | string }
 ) {
-  const keys: { [key: string]: Command } = {};
+  const keys: { [key: string]: any } = {};
   let type;
 
-  function bind(key: string, cmd: Command) {
+  function bind(key: string, cmd: any) {
     if (mapKeys) {
       const mapped = mapKeys[key];
       if (mapped === false) return;

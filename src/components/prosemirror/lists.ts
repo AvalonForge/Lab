@@ -11,7 +11,6 @@ import {
   NodeSelection,
   Selection,
 } from "prosemirror-state";
-import { Command } from "prosemirror-commands";
 
 /// Convenience function for adding list-related node types to a map
 /// specifying the nodes for a schema. Adds
@@ -33,7 +32,7 @@ import { Command } from "prosemirror-commands";
 export function wrapInList(
   listType: NodeType,
   attrs: Attrs | null = null
-): Command {
+): any {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void) {
     const { $from, $to } = state.selection;
     let range = $from.blockRange($to);
@@ -116,7 +115,7 @@ function doWrapInList(
 
 /// Build a command that splits a non-empty textblock at the top level
 /// of a list item by also splitting that list item.
-export function splitListItem(itemType: NodeType): Command {
+export function splitListItem(itemType: NodeType): any {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void) {
     const { $from, $to, node } = state.selection as NodeSelection;
     if ((node && node.isBlock) || $from.depth < 2 || !$from.sameParent($to)) {
@@ -191,7 +190,7 @@ export function splitListItem(itemType: NodeType): Command {
 
 /// Create a command to lift the list item around the selection up into
 /// a wrapping list.
-export function liftListItem(itemType: NodeType): Command {
+export function liftListItem(itemType: NodeType): any {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void) {
     const { $from, $to } = state.selection;
     const range = $from.blockRange(
@@ -307,7 +306,7 @@ function liftOutOfList(
 
 /// Create a command to sink the list item around the selection down
 /// into an inner list.
-export function sinkListItem(itemType: NodeType): Command {
+export function sinkListItem(itemType: NodeType): any {
   return function (state: EditorState, dispatch: any) {
     const { $from, $to } = state.selection;
     const range = $from.blockRange(
