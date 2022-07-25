@@ -75,17 +75,6 @@ export default defineComponent({
     const view = new EditorView(this.$refs["document"] as any, {
       state,
       plugins: [],
-      dispatchTransaction: function (tr: any) {
-        const newState = this.state.apply(tr);
-        this.updateState(newState);
-        const sendable = sendableSteps(newState);
-        if (sendable)
-          console.log({
-            version: sendable.version,
-            steps: sendable.steps,
-            author: sendable.clientID,
-          });
-      },
     });
     this.getDoc = () => {
       return doc;
