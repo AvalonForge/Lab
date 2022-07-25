@@ -48,6 +48,7 @@ export default defineComponent({
 }
 
 .dev .in-dev {
+  @apply border-5 border-type;
   display: inline-block;
 }
 </style>

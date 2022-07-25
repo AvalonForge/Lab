@@ -14,7 +14,7 @@ import Notes from "@/components/crdt-documents/Notes.vue";
 import Document from "@/components/crdt-documents/Document.vue";
 
 export default defineComponent({
-  name: "Guerilla Documents",
+  name: "CRDT Documents",
   components: {
     Document,
     Notes,
