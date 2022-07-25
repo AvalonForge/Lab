@@ -49,6 +49,16 @@
               log state vector
             </button>
           </li>
+          <li>
+            <button type="button" @click="renderHistory(id)">
+              render history
+            </button>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <ul class="operations-list flex-grow" v-for="id in ids" :key="id">
+          <li :key="i" v-for="(event, i) in history[id]">{{ event }}</li>
         </ul>
       </li>
     </ul>
@@ -80,6 +90,8 @@ import { defineComponent } from "vue";
 
 import * as Y from "yjs";
 
+const ids = ["Alpha", "Bravo", "Charlie"] as any;
+
 export default defineComponent({
   name: "Notes",
   props: {
@@ -96,6 +108,11 @@ export default defineComponent({
     return {
       pullFrom: "",
       pullInto: "",
+      history: {
+        Alpha: [] as any,
+        Bravo: [] as any,
+        Charlie: [] as any,
+      } as any,
     };
   },
   methods: {
@@ -108,6 +125,17 @@ export default defineComponent({
     },
     logStateVector: function (id: string) {
       console.log(`${id}:`, Y.encodeStateVector(this.documents()[id].getDoc()));
+    },
+    renderHistory: function (id: string) {
+      console.log(this.documents()[id].getDoc());
+      this.history[id] = [];
+      const clients = this.documents()[id].getDoc().store.clients;
+      clients.forEach((client: any) => {
+        client.forEach((value: any) => {
+          console.log(value);
+          this.history[id].push(`${ids[value.id.client]}: ${value.id.clock}`);
+        });
+      });
     },
 
     /* Global */

@@ -13,7 +13,7 @@
           <router-link to="/typescale"> 07.18.22 Typescale </router-link>
         </li>
         <li>
-          <router-link to="/guerilla-documents">
+          <router-link to="/crdt-documents">
             07.25.22 crdt-documents
           </router-link>
         </li>

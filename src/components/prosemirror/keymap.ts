@@ -35,12 +35,7 @@ const backspace = chainCommands(
 const del = chainCommands(deleteSelection, joinForward, selectNodeForward);
 
 export const baseKeymap = keymap({
-  Enter: chainCommands(
-    newlineInCode,
-    createParagraphNear,
-    liftEmptyBlock,
-    splitBlock
-  ),
+  Enter: chainCommands(createParagraphNear, liftEmptyBlock, splitBlock),
   "Mod-Enter": exitCode,
   Backspace: backspace,
   "Mod-Backspace": backspace,
@@ -50,7 +45,7 @@ export const baseKeymap = keymap({
   "Mod-a": selectAll,
 });
 
-export default function buildKeymap(
+export function buildKeymap(
   schema: Schema,
   mapKeys?: { [key: string]: false | string }
 ) {

@@ -11,11 +11,12 @@ import { defineComponent } from "vue";
 import schema from "@/components/prosemirror/schema";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { collab, sendableSteps } from "prosemirror-collab";
 
 import * as Y from "yjs";
 import { ySyncPlugin } from "y-prosemirror";
 
-import keymap from "@/components/prosemirror/keymap";
+import { baseKeymap, buildKeymap } from "@/components/prosemirror/keymap";
 import shortcuts from "@/components/prosemirror/shortcuts";
 
 const ids = ["Alpha", "Bravo", "Charlie"];
@@ -43,6 +44,7 @@ export default defineComponent({
     // Y-js setup
     const doc = new Y.Doc();
     doc.clientID = this.azimuth.toLowerCase().charCodeAt(0) - 97;
+    doc.gc = false;
     const type = doc.getXmlFragment("prosemirror");
 
     // measurement plugin
@@ -50,7 +52,6 @@ export default defineComponent({
       view: () => {
         return {
           update: (view: EditorView) => {
-            console.log(doc.store.clients);
             doc.store.clients.forEach((value, key) => {
               this.clock[ids[key]] = value.length;
             });
@@ -63,15 +64,28 @@ export default defineComponent({
     const state = EditorState.create({
       schema: schema,
       plugins: [
-        keymap(schema),
+        baseKeymap,
+        buildKeymap(schema),
         shortcuts(schema),
         ySyncPlugin(type as any),
         measurements,
+        collab(),
       ],
     });
     const view = new EditorView(this.$refs["document"] as any, {
       state,
       plugins: [],
+      dispatchTransaction: function (tr: any) {
+        const newState = this.state.apply(tr);
+        this.updateState(newState);
+        const sendable = sendableSteps(newState);
+        if (sendable)
+          console.log({
+            version: sendable.version,
+            steps: sendable.steps,
+            author: sendable.clientID,
+          });
+      },
     });
     this.getDoc = () => {
       return doc;
