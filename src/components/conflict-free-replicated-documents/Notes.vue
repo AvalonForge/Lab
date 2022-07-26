@@ -98,8 +98,8 @@ export default defineComponent({
       if(this.ids.includes(this.syncFrom) && this.ids.includes(this.syncInto)) {
         const fromState = ClockPluginKey.getState(this.documents()[this.syncFrom].getView().state);
         const intoVector = ClockPluginKey.getState(this.documents()[this.syncInto].getView().state).version;
-        const moments = syncFrom(fromState, intoVector)
-        syncInto(moments, this.documents()[this.syncInto].getView())
+        const { moments, lastSync } = syncFrom(fromState, intoVector)
+        syncInto(moments, this.documents()[this.syncInto].getView(), lastSync)
       }
 
     }

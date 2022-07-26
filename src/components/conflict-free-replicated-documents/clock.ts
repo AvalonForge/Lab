@@ -25,141 +25,141 @@ export class ClockState {
 }
 
 export class Moment {
+  version: number;
   constructor(
     readonly timeline: string,
-    readonly version: number,
+    version: number,
     readonly steps: Array<Step>,
     readonly inverts: Array<Step>,
     readonly origin: Transform
-  ) {}
+  ) {
+    this.version = version;
+  }
 }
 
 export function syncFrom(
   fromState: ClockState,
-  intoVector: Map<string, number>
+  intoClock: Map<string, number>
 ) {
-  const diffs = new Map();
-  fromState.version.forEach((version, timeline) => {
-    const intoVersion = intoVector.get(timeline);
-    if (intoVersion == undefined) diffs.set(timeline, version);
-    else diffs.set(timeline, version - intoVersion);
-  });
-  console.log(diffs);
-  const moments = [];
-  diffs.forEach((diff, timeline) => {
-    let i = diff;
-    let j = 0;
-    const fromMoments = fromState.moments;
-    while (i > 0) {
-      if (fromMoments[j].timeline == timeline) {
-        moments.push(fromMoments[j]);
-        i--;
-      }
-      j++;
-    }
-  });
-  console.log(moments);
-  return moments;
-}
+  const fromClock = fromState.version;
 
-export function syncInto(fromMoments: Array<Moment>, intoView: EditorView) {
-  //
-  fromMoments.forEach((moment: Moment) => {
-    const localClock = ClockPluginKey.getState(intoView.state) as ClockState;
-    const momentsToRebase = [];
-    const version = localClock.version;
-    /*
-    let i = 0;
-    const localMoments = localClock.moments;
-    while (i < localMoments.length && !found) {
-      if (localMoments[i].timeline == moment.timeline) {
-        found = true;
-        version.set(moment.timeline, moment.version);
-      } else momentsToRebase.push(localMoments[i]);
-      i++;
-    }
-    console.log(momentsToRebase);
-    */
-    const tr = intoView.state.tr;
-    const rebased = [];
+  //create a set of all known timelines; should be in revere order
+  const timelines = new Set(
+    [...Array.from(fromClock.keys()), ...Array.from(intoClock.keys())].sort(
+      (a, b) => a.charCodeAt(0) - b.charCodeAt(0)
+    )
+  );
+  console.log("timelines", timelines);
 
-    // inverting moments that came after our injected moment
-    let found = false;
-    for (let i = localClock.moments.length - 1; i >= 0 && !found; i--) {
-      console.log("inverting", localClock.moments[i]);
-      if (localClock.moments[i].timeline == moment.timeline) {
-        found = true;
-      } else {
-        rebased.push(localClock.moments.pop());
-        localClock.moments[i].inverts.reverse().forEach((invert) => {
-          tr.step(invert);
-          // deletle moments
-        });
-      }
-    }
-    console.log("completed inversion", tr);
-
-    // injecting the remote moment
-    localClock.moments.push(moment);
-    moment.steps.forEach((step) => {
-      tr.step(step);
-    });
-    console.log("completed injection", tr);
-
-    // reapply our moments
-    rebased.reverse().forEach((rebasedMoment) => {
-      rebasedMoment.steps.forEach((step) => {
-        console.log("mapping", tr.mapping);
-        //const mapped = step.map(tr.mapping())
-      });
-    });
-
-    console.log("completed reordering");
-
-    const newClockState = new ClockState(
-      localClock.azimuth,
-      version,
-      rebased,
-      localClock.derivative
-    );
-    tr.setMeta("addToHistory", false).setMeta(ClockPluginKey, newClockState);
-    console.log(tr);
-    intoView.dispatch(tr);
-  });
-}
-
-export function rebaseMoment(
-  moments: readonly Moment[],
-  injecting: Moment,
-  transform: Transform
-) {
-  /*
-  const result = [];
-  for (let i = 0, mapFrom = moments.length; i < moments.length; i++) {
-    moments[i].steps.reverse()
-    const mapped = moments[i].steps.map((step) =>
-      step.map(transform.mapping.slice(mapFrom))
-    );
-    mapFrom--;
-    if (mapped && !transform.maybeStep(mapped).failed) {
-      console.log(transform.mapping);
-      //transform.mapping.setMirror(mapFrom, transform.steps.length - 1)
-      result.push(
-        new Moment(
-          moments[i].timeline,
-          moments[i].version,
-          mapped,
-          mapped.map((step) =>
-            step.invert(transform.docs[transform.docs.length - 1])
-          ),
-          moments[i].origin
+  // compose a vector that represents the last time documents were synced
+  // the remainining moments will be sent from fromState
+  const lastSync = new Map();
+  timelines.forEach((timeline: string) => {
+    if (
+      fromClock.get(timeline) == undefined ||
+      intoClock.get(timeline) == undefined
+    ) {
+      lastSync.set(timeline, 0);
+    } else {
+      lastSync.set(
+        timeline,
+        Math.min(
+          fromClock.get(timeline) as number,
+          intoClock.get(timeline) as number
         )
       );
     }
+  });
+  console.log("clock at last sync", lastSync);
+
+  // get the moments since fromState in each timeline
+  const momentsSince: Array<Moment> = [];
+  timelines.forEach((timeline: string) => {
+    fromState.moments.forEach((moment) => {
+      if (
+        moment.timeline == timeline &&
+        moment.version > lastSync.get(timeline)
+      )
+        momentsSince.push(moment);
+    });
+  });
+  console.log("moments since last sync", momentsSince);
+
+  return { moments: momentsSince, lastSync: lastSync };
+}
+
+export function syncInto(
+  injectedMoments: Array<Moment>,
+  intoView: EditorView,
+  lastSync: Map<string, number>
+) {
+  //
+  const localClock = ClockPluginKey.getState(intoView.state) as ClockState;
+  const tr = intoView.state.tr;
+
+  // check that all timelines exist on this clock & initialize the onles that don't
+  lastSync.forEach((version, timeline) => {
+    if (localClock.version.get(timeline) == undefined) {
+      localClock.version.set(timeline, 0);
+    }
+  });
+
+  // invert to last sync
+  let found = false;
+  let from = 0;
+  const invertedMoments = [];
+  while (localClock.moments.length > 0 && !found) {
+    const moment = localClock.moments.pop() as Moment;
+    if (moment.version == lastSync.get(moment.timeline)) {
+      localClock.moments.push(moment);
+      found = true;
+    } else {
+      localClock.version.set(moment.timeline, moment.version - 1);
+      invertedMoments.push(moment);
+      moment.inverts.forEach((invert) => {
+        from++;
+        tr.step(invert);
+      });
+    }
   }
-  console.log(result);
-  return result;
-  */
+  invertedMoments.reverse().forEach((moment) => {
+    injectedMoments.push(moment);
+  });
+  console.log("inverted version:", localClock.version);
+  console.log("inverted moments:", localClock.moments);
+  console.log("new injected moments:", injectedMoments);
+
+  //inject new moments
+  lastSync.forEach((version, timeline) => {
+    console.log("timeline", timeline);
+    let i = 0;
+    injectedMoments.forEach((moment) => {
+      if (moment.timeline == timeline) {
+        console.log("injecting moment", moment);
+        localClock.version.set(
+          timeline,
+          (localClock.version.get(timeline) as number) + 1
+        );
+        moment.version = localClock.version.get(timeline) as number;
+        localClock.moments.push(moment);
+        moment.steps.forEach((step) => {
+          console.log("applying step:", step);
+          const mapped = step.map(tr.mapping.slice(from + i));
+          if (mapped) {
+            tr.step(mapped);
+            i++;
+          } else {
+            console.log("mapping step failed:", step, mapped);
+            if (mapped)
+              console.log("failed to inject step:", tr.maybeStep(mapped));
+          }
+        });
+      }
+    });
+  });
+
+  tr.setMeta("addToHistory", false).setMeta(ClockPluginKey, localClock);
+  intoView.dispatch(tr);
 }
 
 /**
