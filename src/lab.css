@@ -89,7 +89,7 @@ aside {
 }
 
 .operations-list li {
-  @apply flex gap-3 flex-wrap;
+  @apply flex gap-3 flex-wrap items-center;
 }
 
 .operations-list li > * {
@@ -133,20 +133,27 @@ select:active,
   @apply shadow-lab-inset;
 }
 
-input,
 *[contenteditable="true"] {
   outline: 1px solid #262626;
   outline-offset: 0px;
 }
 
-input,
 *[contenteditable="true"]:hover {
   outline: 1px solid #262626;
   outline-offset: 2px;
 }
 
-input,
 *[contenteditable="true"]:focus {
   outline: 2px solid #262626;
   outline-offset: 2px;
+}
+
+input[type="checkbox" i] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+}
+
+input[type="checkbox" i]:checked {
+  @apply bg-type;
 }

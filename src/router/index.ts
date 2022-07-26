@@ -51,6 +51,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/Typescale.vue"),
     meta: {
       dev: true,
+      timestamp: "07.18.22",
     },
   },
   {
@@ -59,7 +60,26 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/CRDT-Documents.vue"),
     meta: {
       dev: true,
+      timestamp: "07.21.22",
       live: true,
+    },
+  },
+  {
+    path: "/document-versions",
+    name: "Document Versions",
+    component: () => import("@/views/Document-Versions.vue"),
+    meta: {
+      dev: true,
+      timestamp: "07.25.22",
+    },
+  },
+  {
+    path: "/conflict-free-replicated-documents",
+    name: "Conflict Free Replicated Documents",
+    component: () => import("@/views/Conflict-Free-Replicated-Documents.vue"),
+    meta: {
+      dev: true,
+      timestamp: "07.25.22",
     },
   },
 ];
