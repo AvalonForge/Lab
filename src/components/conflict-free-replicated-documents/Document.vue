@@ -23,16 +23,33 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      getView: () => {
+        //
+      },
+    };
+  },
   mounted: function () {
+    const defaultVersion = new Map();
+    defaultVersion.set(this.azimuth, 0);
     // Prosemirror setup
     const state = EditorState.create({
       schema: schema,
-      plugins: [baseKeymap, buildKeymap(schema), shortcuts(schema), clock],
+      plugins: [
+        baseKeymap,
+        buildKeymap(schema),
+        shortcuts(schema),
+        clock(this.azimuth, defaultVersion, [], 0),
+      ],
     });
     const view = new EditorView(this.$refs["document"] as any, {
       state,
       plugins: [],
     });
+    this.getView = () => {
+      return view;
+    };
   },
 });
 </script>
