@@ -26,14 +26,19 @@ export class ClockState {
 
 export class Moment {
   version: number;
+  steps: Array<Step>;
+  inverts: Array<Step>;
+
   constructor(
     readonly timeline: string,
     version: number,
-    readonly steps: Array<Step>,
-    readonly inverts: Array<Step>,
+    steps: Array<Step>,
+    inverts: Array<Step>,
     readonly origin: Transform
   ) {
     this.version = version;
+    this.steps = steps;
+    this.inverts = inverts;
   }
 }
 
@@ -123,6 +128,7 @@ export function syncInto(
     }
   }
   invertedMoments.reverse().forEach((moment) => {
+    Object.assign(moment, { inverted: true });
     injectedMoments.push(moment);
   });
   console.log("inverted version:", localClock.version);
@@ -130,23 +136,35 @@ export function syncInto(
   console.log("new injected moments:", injectedMoments);
 
   //inject new moments
+  let syncedMapTo = from;
+  let unsyncedMapTo = from;
   lastSync.forEach((version, timeline) => {
     console.log("timeline", timeline);
     let i = 0;
     injectedMoments.forEach((moment) => {
       if (moment.timeline == timeline) {
-        console.log("injecting moment", moment);
+        //console.log("injecting moment", moment);
         localClock.version.set(
           timeline,
           (localClock.version.get(timeline) as number) + 1
         );
         moment.version = localClock.version.get(timeline) as number;
-        localClock.moments.push(moment);
+        const mappedSteps: Array<Step> = [];
+        const mappedInverts: Array<Step> = [];
         moment.steps.forEach((step) => {
-          console.log("applying step:", step);
-          const mapped = step.map(tr.mapping.slice(from + i));
+          //console.log("applying step:", step);
+          const mapped = step.map(
+            tr.mapping.slice(
+              from,
+              (moment as any).inverted ? unsyncedMapTo : syncedMapTo
+            )
+          );
+          (moment as any).inverted ? syncedMapTo++ : unsyncedMapTo++;
           if (mapped) {
+            mappedSteps.push(mapped);
+            console.log(tr, mapped);
             tr.step(mapped);
+            mappedInverts.push(mapped.invert(tr.docs[tr.docs.length - 1]));
             i++;
           } else {
             console.log("mapping step failed:", step, mapped);
@@ -154,6 +172,10 @@ export function syncInto(
               console.log("failed to inject step:", tr.maybeStep(mapped));
           }
         });
+        moment.steps = mappedSteps;
+        moment.inverts = mappedInverts;
+        (moment as any).inverted = undefined;
+        localClock.moments.push(moment);
       }
     });
   });
