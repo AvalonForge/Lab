@@ -18,7 +18,7 @@ export const versions = (selected: () => Array<number>) =>
       },
       apply(tr, tracked) {
         if (tr.docChanged) tracked = tracked.applyTransform(tr);
-        const commit = tr.getMeta(this);
+        const commit = tr.getMeta(VersionPluginKey);
         if (commit)
           tracked = tracked.applyCommit(
             commit.message,
