@@ -76,15 +76,21 @@ export function getSync(fromState: ClockState, intoClock: Map<string, number>) {
 
   // get the moments since fromState in each timeline
   const momentsSince: Array<Moment> = [];
-  timelines.forEach((timeline: string) => {
-    fromState.moments.forEach((moment) => {
-      if (
-        moment.timeline == timeline &&
-        moment.version > lastSync.get(timeline)
-      )
-        momentsSince.push(moment);
-    });
-  });
+  /*
+  const found = new Map()
+  lastSync.forEach((version, timeline) => {
+    found.set(timeline, false);
+  })
+  */
+  for (let i = fromState.moments.length; i > 0; i--) {
+    if (
+      fromState.moments[i - 1].version ==
+      lastSync.get(fromState.moments[i - 1].timeline)
+    )
+      break;
+    momentsSince.push(fromState.moments[i - 1]);
+  }
+  momentsSince.reverse();
   console.log("moments since last sync", momentsSince);
 
   return { moments: momentsSince, lastSync: lastSync };
@@ -124,15 +130,126 @@ export function receiveSync(
       });
     }
   }
-  invertedMoments.reverse().forEach((moment) => {
-    Object.assign(moment, { inverted: true });
-    injectedMoments.push(moment);
-  });
-  console.log("inverted version:", localClock.version);
-  console.log("inverted moments:", localClock.moments);
-  console.log("new injected moments:", injectedMoments);
+  invertedMoments.reverse();
+  console.log(
+    "inverted version:",
+    localClock.version,
+    " last sync: ",
+    lastSync
+  );
+  console.log(
+    "inverted moments:",
+    invertedMoments,
+    " injected moments",
+    injectedMoments
+  );
+
+  // mesh moments
+  //let localOffset = 0;
+  const localMappings: Array<any> = [];
+  //let remoteOffset = 0;
+  const remoteMappings: Array<any> = [];
+  let i = injectedMoments.length + invertedMoments.length;
+  while (i > 0) {
+    // select the priority timeline for conccurrent events
+    if (
+      injectedMoments[remoteMappings.length] &&
+      (!invertedMoments[localMappings.length] ||
+        injectedMoments[remoteMappings.length].timeline.charCodeAt(0) <
+          invertedMoments[localMappings.length].timeline.charCodeAt(0))
+    ) {
+      // inject the remote moment
+      const moment = injectedMoments[remoteMappings.length];
+      console.log("Injecting remote moment", moment);
+      localClock.version.set(moment.timeline, moment.version);
+
+      const mappedSteps: Array<Step> = [];
+      const mappedInverts: Array<Step> = [];
+      moment.steps.forEach((step) => {
+        //map step across local steps
+        let mapped = step;
+        localMappings.forEach((mapping) => {
+          mapped = (mapped as any).map(mapping);
+        });
+        //implment this mapped step
+        // create a mapping for this step
+        if (mapped) {
+          tr.step(mapped);
+          mappedSteps.push(mapped);
+          mappedInverts.push(mapped.invert(tr.docs[tr.docs.length - 1]));
+          console.log(
+            tr.mapping.slice(
+              from + remoteMappings.length,
+              from + remoteMappings.length + 1
+            )
+          );
+          remoteMappings.push(
+            tr.mapping.slice(
+              from + remoteMappings.length,
+              from + remoteMappings.length + 1
+            )
+          );
+          console.log(remoteMappings);
+          //remoteOffset++;
+        } else {
+          console.log("mapping step failed:", step, mapped);
+          if (mapped)
+            console.log("failed to inject step:", tr.maybeStep(mapped));
+        }
+      });
+
+      i--;
+      moment.steps = mappedSteps;
+      localClock.moments.push(moment);
+    } else {
+      // inject the local moment
+      const moment = invertedMoments[localMappings.length];
+      console.log("Injecting local moment", moment);
+      localClock.version.set(moment.timeline, moment.version);
+
+      const mappedSteps: Array<Step> = [];
+      const mappedInverts: Array<Step> = [];
+      moment.steps.forEach((step) => {
+        //map step across local steps
+        let mapped = step;
+        remoteMappings.forEach((mapping) => {
+          mapped = (mapped as any).map(mapping);
+        });
+        //implment this mapped step
+        // create a mapping for this step
+        if (mapped) {
+          tr.step(mapped);
+          mappedSteps.push(mapped);
+          mappedInverts.push(mapped.invert(tr.docs[tr.docs.length - 1]));
+          console.log(
+            tr.mapping.slice(
+              from + localMappings.length,
+              from + localMappings.length + 1
+            )
+          );
+          localMappings.push(
+            tr.mapping.slice(
+              from + localMappings.length,
+              from + localMappings.length + 1
+            )
+          );
+          console.log(localMappings);
+          //remoteOffset++;
+        } else {
+          console.log("mapping step failed:", step, mapped);
+          if (mapped)
+            console.log("failed to inject step:", tr.maybeStep(mapped));
+        }
+      });
+
+      i--;
+      moment.steps = mappedSteps;
+      localClock.moments.push(moment);
+    }
+  }
 
   //inject new moments
+  /*
   let syncedMapTo = from;
   let unsyncedMapTo = from;
   lastSync.forEach((version, timeline) => {
@@ -176,6 +293,7 @@ export function receiveSync(
       }
     });
   });
+  */
 
   tr.setMeta("addToHistory", false).setMeta(ClockPluginKey, localClock);
   intoView.dispatch(tr);
