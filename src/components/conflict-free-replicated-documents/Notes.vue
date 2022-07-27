@@ -4,22 +4,22 @@
     <ul class="operations-list">
       <li>
         Sync:
-        <select class="" v-model="syncFrom">
+        <select class="" v-model="syncA">
           <option :value="''"></option>
           <option
             :key="id"
-            v-for="id in ids.filter((id) => id != syncInto)"
+            v-for="id in ids.filter((id) => id != syncB)"
             :value="id"
           >
             {{ id }}
           </option>
         </select>
         into:
-        <select class="" v-model="syncInto">
+        <select class="" v-model="syncB">
           <option :value="''"></option>
           <option
             :key="id"
-            v-for="id in ids.filter((id) => id != syncFrom)"
+            v-for="id in ids.filter((id) => id != syncA)"
             :value="id"
           >
             {{ id }}
@@ -27,7 +27,7 @@
         </select>
         <button
           type="button"
-          @click="syncFromTo(syncFrom, syncInto)"
+          @click="sync()"
           class="flex-none"
         >
           execute
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { ClockPluginKey, syncFrom, syncInto } from "./clock"
+import { ClockPluginKey, receiveSync, getSync } from "./clock"
 
 export default defineComponent({
   name: "Notes",
@@ -80,8 +80,8 @@ export default defineComponent({
   },
   data() {
     return {
-      syncFrom: "",
-      syncInto: "",
+      syncA: "",
+      syncB: "",
     }
   },
   mounted: function() {
@@ -94,14 +94,19 @@ export default defineComponent({
     logClock: function(id: string) {
       console.log(`${id}:`, ClockPluginKey.getState(this.documents()[id].getView().state))
     },
-    syncFromTo: function() {
-      if(this.ids.includes(this.syncFrom) && this.ids.includes(this.syncInto)) {
-        const fromState = ClockPluginKey.getState(this.documents()[this.syncFrom].getView().state);
-        const intoVector = ClockPluginKey.getState(this.documents()[this.syncInto].getView().state).version;
-        const { moments, lastSync } = syncFrom(fromState, intoVector)
-        syncInto(moments, this.documents()[this.syncInto].getView(), lastSync)
+    sync: function() {
+      this.syncFromTo(this.syncA, this.syncB);
+      this.syncFromTo(this.syncB, this.syncA);
+      this.syncA = "";
+      this.syncB = ""
+    },
+    syncFromTo: function(syncFrom: string, syncInto: string) {
+      if(this.ids.includes(syncFrom) && this.ids.includes(syncInto)) {
+        const fromState = ClockPluginKey.getState(this.documents()[syncFrom].getView().state);
+        const intoVector = ClockPluginKey.getState(this.documents()[syncInto].getView().state).version;
+        const { moments, lastSync } = getSync(fromState, intoVector)
+        receiveSync(moments, this.documents()[syncInto].getView(), lastSync)
       }
-
     }
   }
 })

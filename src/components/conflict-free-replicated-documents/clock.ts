@@ -42,10 +42,7 @@ export class Moment {
   }
 }
 
-export function syncFrom(
-  fromState: ClockState,
-  intoClock: Map<string, number>
-) {
+export function getSync(fromState: ClockState, intoClock: Map<string, number>) {
   const fromClock = fromState.version;
 
   //create a set of all known timelines; should be in revere order
@@ -93,7 +90,7 @@ export function syncFrom(
   return { moments: momentsSince, lastSync: lastSync };
 }
 
-export function syncInto(
+export function receiveSync(
   injectedMoments: Array<Moment>,
   intoView: EditorView,
   lastSync: Map<string, number>
