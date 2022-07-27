@@ -21,7 +21,7 @@ export default defineComponent({
   },
   data() {
     return {
-      ids: ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtroty"],
+      ids: ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot"],
     };
   },
   methods: {

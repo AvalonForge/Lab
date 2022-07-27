@@ -56,15 +56,16 @@
       We evade this requirement by building document history as a CRDT.
       <br>
       You can think of a doument as the consequence of a timeline of actions.
-      To allow users to edit the document without a omnipresent central authority,
+      To avoid an omnipresent central authority,
       each machine maintains it's own timeline of events.
       The challenge is collapsing these timelines
       <br>
-      This compormise was made in order to acheive:
+      This compormise was made in order to acheive a few characteristics:
       <ul>
-        <li>A fully distributed implementation</li>
-        <li>A complete document history</li>
-        <li>Deterministic conflict resolution</li>
+        <li>Any two peers can sync their versions without conflicts</li>
+        <li>A complete, traversable document history</li>
+        <li>Changes maintain their order from the perspective of their author</li>
+        <li>Syncing changes will always result in the same outcome</li>
       </ul>
     </p>
   </aside>
