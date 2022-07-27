@@ -51,7 +51,15 @@
     </ul>
     <h3>Design Notes</h3>
     <p>
-      This isn't actually a true CRDT; It's an OT architecture with some CRDT properties. <br>
+      This a compromise of CRDT and OT architectures.
+      The document operaters under prosemirror's model for OTs; normally this would require a central authority to serve as the source of truth.
+      We evade this requirement by building document history as a CRDT.
+      <br>
+      You can think of a doument as the consequence of a timeline of actions.
+      To allow users to edit the document without a omnipresent central authority,
+      each machine maintains it's own timeline of events.
+      The challenge is collapsing these timelines
+      <br>
       This compormise was made in order to acheive:
       <ul>
         <li>A fully distributed implementation</li>
