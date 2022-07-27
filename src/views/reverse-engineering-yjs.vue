@@ -10,11 +10,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Notes from "@/components/conflict-free-replicated-documents/Notes.vue";
-import Document from "@/components/conflict-free-replicated-documents/Document.vue";
+import Notes from "@/components/reverse-engineering-yjs/Notes.vue";
+import Document from "@/components/reverse-engineering-yjs/Document.vue";
 
 export default defineComponent({
-  name: "Config Free Replicated Documents",
+  name: "Reverse Engineering Yjs",
   components: {
     Document,
     Notes,

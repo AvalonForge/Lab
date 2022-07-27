@@ -8,8 +8,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Notes from "@/components/document-versions/Notes.vue";
-import Document from "@/components/document-versions/Document.vue";
+import Notes from "@/components/git-like-document-history/Notes.vue";
+import Document from "@/components/git-like-document-history/Document.vue";
 
 export default defineComponent({
   name: "Document Versions",

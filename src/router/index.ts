@@ -55,31 +55,31 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/crdt-documents",
-    name: "CRDT Documents",
-    component: () => import("@/views/CRDT-Documents.vue"),
+    path: "/reverse-engineering-yjs",
+    name: "Reverse Engineering Yjs",
+    component: () => import("@/views/reverse-engineering-yjs.vue"),
     meta: {
       dev: true,
       timestamp: "07.21.22",
+    },
+  },
+  {
+    path: "/git-like-document-history",
+    name: "Git Like Document History",
+    component: () => import("@/views/git-like-document-history.vue"),
+    meta: {
+      dev: true,
+      timestamp: "07.25.22",
+    },
+  },
+  {
+    path: "/conflict-free-replicated-timelines",
+    name: "Conflict Free Replicated Timelines",
+    component: () => import("@/views/conflict-free-replicated-timelines.vue"),
+    meta: {
+      dev: true,
+      timestamp: "07.25.22",
       live: true,
-    },
-  },
-  {
-    path: "/document-versions",
-    name: "Document Versions",
-    component: () => import("@/views/Document-Versions.vue"),
-    meta: {
-      dev: true,
-      timestamp: "07.25.22",
-    },
-  },
-  {
-    path: "/conflict-free-replicated-documents",
-    name: "Conflict Free Replicated Documents",
-    component: () => import("@/views/Conflict-Free-Replicated-Documents.vue"),
-    meta: {
-      dev: true,
-      timestamp: "07.25.22",
     },
   },
 ];
