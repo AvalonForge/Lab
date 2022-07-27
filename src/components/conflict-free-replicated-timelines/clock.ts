@@ -210,13 +210,13 @@ export const clock = (
           } else {
             state.version.set(
               state.azimuth,
-              state.version.get(state.azimuth) + 1
+              (state.version.get(state.azimuth) as number) + 1
             );
           }
 
           const moment = new Moment(
             state.azimuth,
-            state.version.get(state.azimuth),
+            state.version.get(state.azimuth) as number,
             tr.steps,
             tr.steps.map((step, i) => step.invert(tr.docs[i])),
             tr
