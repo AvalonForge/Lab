@@ -10,18 +10,18 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Notes from "@/components/crdt-documents/Notes.vue";
-import Document from "@/components/crdt-documents/Document.vue";
+import Notes from "@/components/conflict-free-replicated-timelines/Notes.vue";
+import Document from "@/components/conflict-free-replicated-timelines/Document.vue";
 
 export default defineComponent({
-  name: "CRDT Documents",
+  name: "Config Free Replicated Timelines",
   components: {
     Document,
     Notes,
   },
   data() {
     return {
-      ids: ["Alpha", "Bravo", "Charlie"],
+      ids: ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtroty"],
     };
   },
   methods: {
