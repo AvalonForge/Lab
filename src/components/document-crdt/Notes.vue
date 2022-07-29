@@ -64,23 +64,15 @@
     </ul>
 
     <h3>Notes</h3>
-    <p>
-      This is a test of the Y-js Xml CRDT as a solution for a distributed
-      document system.
-    </p>
+    <p>This is a live test of a Xml based CRDT integration with prosemirror.</p>
     <p>
       <strong>Characteristics:</strong>
     </p>
     <ul>
-      <li>Changes in arbitrary order must merge to the same result</li>
-      <li>Merged changes must preserve intention</li>
-      <li>Documents will propogate all known changes, regardless of source</li>
-    </ul>
-    <p><strong>The result should be:</strong></p>
-    <ul>
-      <li>Accessible regarless to downtime, poor connection, & censorship</li>
-      <li>Simply mutable... merging is invisible to users (unlike git)</li>
-      <li>Exponentially stronger at scale</li>
+      <li>Changes in arbitrary order merge to the same result</li>
+      <li>Merged changes preserve intention</li>
+      <li>Documents can propogate all known changes, regardless of source</li>
+      <li>Documents can programmatically accept / reject changes</li>
     </ul>
   </aside>
 </template>

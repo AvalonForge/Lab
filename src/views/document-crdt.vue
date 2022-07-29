@@ -10,8 +10,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Notes from "@/components/reverse-engineering-yjs/Notes.vue";
-import Document from "@/components/reverse-engineering-yjs/Document.vue";
+import Notes from "@/components/document-crdt/Notes.vue";
+import Document from "@/components/document-crdt/Document.vue";
 
 export default defineComponent({
   name: "Reverse Engineering Yjs",

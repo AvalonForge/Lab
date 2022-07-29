@@ -12,9 +12,11 @@ import schema from "@/components/prosemirror/schema";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { collab, sendableSteps } from "prosemirror-collab";
+import { keymap } from "prosemirror-keymap";
 
 import * as Y from "yjs";
-import { ySyncPlugin } from "y-prosemirror";
+import { sync } from "./sync";
+import { localundo, undo, redo } from "./undo";
 
 import { baseKeymap, buildKeymap } from "@/components/prosemirror/keymap";
 import shortcuts from "@/components/prosemirror/shortcuts";
@@ -67,7 +69,12 @@ export default defineComponent({
         baseKeymap,
         buildKeymap(schema),
         shortcuts(schema),
-        ySyncPlugin(type as any),
+        keymap({
+          "Mod-z": undo,
+          "Mod-y": redo,
+        }),
+        sync(type as any, {}),
+        localundo({}),
         measurements,
         collab(),
       ],

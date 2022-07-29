@@ -7,6 +7,8 @@ import {
 } from "prosemirror-model";
 //import { ConfigSpec, ConfigTermSpec } from "../plugins/config/plugin.ts"
 
+export const protectedBlocks = new Set(["paragraph"]);
+
 const schema = new Schema({
   nodes: {
     // Document

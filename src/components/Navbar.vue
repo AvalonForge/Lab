@@ -35,6 +35,7 @@ export default defineComponent({
     experiments: function (): Array<string> {
       return this.$router
         .getRoutes()
+        .filter((route) => route.meta.hidden !== true)
         .map((route) => route.path.replace(/\//, ""))
         .filter((route: string) => route);
     },
