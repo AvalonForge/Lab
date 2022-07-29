@@ -46,6 +46,11 @@
               log clock
             </button>
           </li>
+          <li>
+            <button type="button" @click="stepBack(id)">
+              step back
+            </button>
+          </li>
         </ul>
       </li>
     </ul>
@@ -102,6 +107,12 @@ export default defineComponent({
     },
     logClock: function(id: string) {
       console.log(`${id}:`, ClockPluginKey.getState(this.documents()[id].getView().state))
+    },
+    stepBack: function(id: string) {
+      const view = this.documents()[id].getView()
+      const tr = view.state.tr;
+      ClockPluginKey.getState(view.state).stepBack(tr);
+      view.dispatch(tr)
     },
     sync: function() {
       this.syncFromTo(this.syncA, this.syncB);
