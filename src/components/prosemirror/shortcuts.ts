@@ -9,6 +9,7 @@ import {
   InputRule,
   wrappingInputRule,
   inputRules,
+  textblockTypeInputRule,
 } from "prosemirror-inputrules";
 import { EditorView } from "prosemirror-view";
 import { Schema, NodeType, Attrs, MarkType } from "prosemirror-model";
@@ -17,35 +18,26 @@ import { getNodeType } from "./schema";
 
 export const MarkdownPluginKey = new PluginKey("markdown-commands");
 
-const headingRule = new InputRule(
+const headingRule = textblockTypeInputRule(
   new RegExp("^(#{1,3})\\s$"),
-  (state, match, start, end) => {
-    return state.tr.replaceWith(
-      start - 1,
-      end,
-      schema.nodes["heading"].create({ level: match[0].length - 1 })
-    );
-  }
+  schema.nodes["heading"],
+  (match: any) => ({ level: match[1].length })
 );
 
-const blockquoteRule = new InputRule(
-  new RegExp("^>\\s$"),
-  (state, match, start, end) => {
-    return state.tr.replaceWith(
-      start - 1,
-      end,
-      schema.nodes["blockquote"].create({}, schema.nodes["paragraph"].create())
-    );
-  }
+const blockquoteRule = wrappingInputRule(
+  /^\s*>\s$/,
+  schema.nodes["blockquote"]
 );
 
+/*
 const asideRule = new InputRule(
   new RegExp("^>>>\\s$"),
   (state, match, start, end) => {
     return state.tr.replaceWith(start - 1, end, schema.nodes["aside"].create());
   }
 );
-
+*/
+/*
 const horizontalRuleRule = new InputRule(
   new RegExp("^(---|___)\\s$"),
   (state, match, start, end) => {
@@ -56,46 +48,26 @@ const horizontalRuleRule = new InputRule(
     );
   }
 );
+*/
 
-const codeBlockRule = new InputRule(
-  new RegExp("^```\\s$"),
-  (state, match, start, end) => {
-    return state.tr.replaceWith(
-      start - 1,
-      end,
-      schema.nodes["code-block"].create()
-    );
-  }
+const codeBlockRule = textblockTypeInputRule(
+  /^```$/,
+  schema.nodes["code-block"]
 );
 
-const OrderedListRule = new InputRule(
-  new RegExp("^1.\\s$"),
-  (state, match, start, end) => {
-    return state.tr.replaceWith(
-      start - 1,
-      end,
-      schema.nodes["ordered-list"].create(
-        {},
-        schema.nodes["listitem"].create({}, schema.nodes["paragraph"].create())
-      )
-    );
-  }
+const UnorderedListRule = wrappingInputRule(
+  /^\s*([-+*])\s$/,
+  schema.nodes["unordered-list"]
 );
 
-const UnorderedListRule = new InputRule(
-  /^(-|\+)\s$/,
-  (state, match, start, end) => {
-    return state.tr.replaceWith(
-      start - 1,
-      end,
-      schema.nodes["unordered-list"].create(
-        {},
-        schema.nodes["listitem"].create({}, schema.nodes["paragraph"].create())
-      )
-    );
-  }
+const OrderedListRule = wrappingInputRule(
+  /^(\d+)\.\s$/,
+  schema.nodes["ordered-list"],
+  (match) => ({ order: +match[1] }),
+  (match, node) => node.childCount + node.attrs.order == +match[1]
 );
 
+/*
 const CheckListRule = new InputRule(
   /^(\[\]|\[\s\])\s$/,
   (state, match, start, end) => {
@@ -113,6 +85,7 @@ const CheckListRule = new InputRule(
     );
   }
 );
+*/
 
 const boldRule = markInputRule(
   /(?:^|\s)((?:\*\*)(?<content>(?:[^*]+))(?:\*\*))$/,
@@ -144,14 +117,13 @@ export default (schema: Schema) => {
   if (typeof schema.nodes["blockquote"] != undefined)
     rules.push(blockquoteRule);
   if (typeof schema.nodes["code-block"] != undefined) rules.push(codeBlockRule);
-  if (typeof schema.nodes["aside"] != undefined) rules.push(asideRule);
-  if (typeof schema.nodes["horizontal-rule"] != undefined)
-    rules.push(horizontalRuleRule);
+  //if (typeof schema.nodes["aside"] != undefined) rules.push(asideRule);
+  //if (typeof schema.nodes["horizontal-rule"] != undefined)rules.push(horizontalRuleRule);
   if (typeof schema.nodes["ordered-list"] != undefined)
     rules.push(OrderedListRule);
   if (typeof schema.nodes["unordered-list"] != undefined)
     rules.push(UnorderedListRule);
-  if (typeof schema.nodes["check-list"] != undefined) rules.push(CheckListRule);
+  //if (typeof schema.nodes["check-list"] != undefined) rules.push(CheckListRule);
   if (typeof schema.marks["strong"] != undefined) rules.push(boldRule);
   if (typeof schema.marks["italic"] != undefined) rules.push(italicRule);
   if (typeof schema.marks["strike"] != undefined) rules.push(strikeRule);
