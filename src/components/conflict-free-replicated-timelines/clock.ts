@@ -236,12 +236,15 @@ export function receiveSync(
   */
 
   // invert to last sync
+  /*
   console.log("inverting moments");
   const invertedMoments = localClock.stepBackTo(lastSync, tr).reverse();
   const from = invertedMoments.reduce(
     (n, moment) => n + moment.inverts.length,
     0
   );
+  */
+  const invertedMoments: Array<Moment> = [];
   /*
   let found = false;
   let from = 0;
@@ -341,12 +344,14 @@ export function receiveSync(
       const mappedInverts: Array<Step> = [];
       moment.steps.forEach((step) => {
         //map step across local steps
+        /*
         console.log(
           from,
           localMappings.length,
           tr.mapping.slice(from - localMappings.length)
         );
-        const mapped = step.map(tr.mapping.slice(from - localMappings.length));
+        */
+        const mapped = step; //.map(tr.mapping.slice(from - localMappings.length));
 
         /*
         for (let j = 0; j < remoteMappings.length; j++) {
@@ -363,10 +368,12 @@ export function receiveSync(
         //implment this mapped step
         // create a mapping for this step
         if (mapped && !tr.maybeStep(mapped).failed) {
+          /*
           (tr.mapping as any).setMirror(
             from - localMappings.length,
             tr.steps.length - 1
           );
+          */
 
           mappedSteps.push(mapped);
           mappedInverts.push(mapped.invert(tr.docs[tr.docs.length - 1]));
