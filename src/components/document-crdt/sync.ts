@@ -60,7 +60,7 @@ export const sync = (
         if (change !== undefined) {
           state = Object.assign({}, state);
           for (const key in change) {
-            state[key] = change[key];
+            (state as any)[key] = change[key];
           }
         }
 
@@ -90,12 +90,10 @@ export const sync = (
                   state
                 );
 
-                delete state.restore;
-                delete state.snapshot;
-                delete state.prevSnapshot;
-                state.binding._prosemirrorChanged(
-                  state.binding.prosemirrorView.state.doc
-                );
+                delete (state as any).restore;
+                state.snapshot = null;
+                state.prevSnapshot = null;
+                state.binding._prosemirrorChanged(state.binding.view.state.doc);
               }
             }, 0);
           }
@@ -122,7 +120,7 @@ export const sync = (
             if (
               changedInitialContent ||
               view.state.doc.content.findDiffStart(
-                view.state.doc.type.createAndFill().content
+                (view.state.doc.type.createAndFill() as any).content
               ) != null
             ) {
               changedInitialContent = true;
