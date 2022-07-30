@@ -55,12 +55,13 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/reverse-engineering-yjs",
-    name: "Reverse Engineering Yjs",
-    component: () => import("@/views/reverse-engineering-yjs.vue"),
+    path: "/document-crdt",
+    name: "Document CRDT",
+    component: () => import("@/views/document-crdt.vue"),
     meta: {
       dev: true,
       timestamp: "07.21.22",
+      live: true,
     },
   },
   {
@@ -70,6 +71,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       dev: true,
       timestamp: "07.25.22",
+      hidden: true,
     },
   },
   {
@@ -79,7 +81,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       dev: true,
       timestamp: "07.25.22",
-      live: true,
+      hidden: true,
     },
   },
 ];

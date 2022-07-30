@@ -19,7 +19,10 @@ export default defineComponent({
   name: "Root",
   computed: {
     experiments: function (): Array<any> {
-      return this.$router.getRoutes().filter((route) => route.path !== "/");
+      return this.$router
+        .getRoutes()
+        .filter((route) => route.meta.hidden !== true)
+        .filter((route) => route.path !== "/");
     },
   },
 });

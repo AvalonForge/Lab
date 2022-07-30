@@ -1,7 +1,6 @@
 <template lang="html">
   <section class="outline outline-2 outline-type relative" ref="document">
     <h2>{{ azimuth }}</h2>
-    <div class="absolute" :style="{ top: 0, right: 0 }">{{ clock }}</div>
   </section>
 </template>
 
@@ -12,20 +11,28 @@ import schema from "@/components/prosemirror/schema";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { collab, sendableSteps } from "prosemirror-collab";
+import { keymap } from "prosemirror-keymap";
 
 import * as Y from "yjs";
-import { ySyncPlugin } from "y-prosemirror";
+import { sync } from "./sync";
+import { localundo, undo, redo } from "./undo";
 
 import { baseKeymap, buildKeymap } from "@/components/prosemirror/keymap";
 import shortcuts from "@/components/prosemirror/shortcuts";
-
-const ids = ["Alpha", "Bravo", "Charlie"];
 
 export default defineComponent({
   name: "Document",
   props: {
     azimuth: {
       type: String,
+      required: true,
+    },
+    ids: {
+      type: Array,
+      required: true,
+    },
+    measure: {
+      type: Function,
       required: true,
     },
   },
@@ -52,9 +59,7 @@ export default defineComponent({
       view: () => {
         return {
           update: (view: EditorView) => {
-            doc.store.clients.forEach((value, key) => {
-              this.clock[ids[key]] = value.length;
-            });
+            this.measure(this.azimuth, doc);
           },
         };
       },
@@ -67,7 +72,12 @@ export default defineComponent({
         baseKeymap,
         buildKeymap(schema),
         shortcuts(schema),
-        ySyncPlugin(type as any),
+        keymap({
+          "Mod-z": undo,
+          "Mod-y": redo,
+        }),
+        sync(type as any, {}),
+        localundo({}),
         measurements,
         collab(),
       ],
