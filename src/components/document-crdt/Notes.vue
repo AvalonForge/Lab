@@ -22,7 +22,8 @@
       <li class="border-b border-type">
         <input
           type="checkbox"
-          v-model="measurements[id]['online']"
+          value="measurements[id]['online']"
+          @click="toggleOnline(id)"
           class="flex-none"
         />
         <label class="font-bold">{{ id }}</label>
@@ -32,51 +33,12 @@
           class="flex-none"
         />
         <button
-          class="text-sm flex-none"
+          class="text-sm"
           :class="{ disabled: measurements[id]['passive-pull'] }"
           @click="pull(id)"
         >
           pull
         </button>
-        <select
-          class="text-sm"
-          :ref="`${id}pull`"
-          :class="{ disabled: measurements[id]['passive-pull'] }"
-        >
-          <option :value="''"></option>
-          <option
-            :key="timeline"
-            v-for="timeline in ids.filter((timeline) => timeline != id)"
-            :value="timeline"
-          >
-            {{ timeline }}
-          </option>
-        </select>
-        <input
-          type="checkbox"
-          v-model="measurements[id]['passive-accept']"
-          class="flex-none"
-        />
-        <button
-          class="text-sm flex-none"
-          :class="{ disabled: measurements[id]['passive-accept'] }"
-        >
-          accept
-        </button>
-        <select
-          class="text-sm"
-          :class="{ disabled: measurements[id]['passive-accept'] }"
-          :ref="`${id}accept`"
-        >
-          <option :value="''"></option>
-          <option
-            :key="timeline"
-            v-for="timeline in ids.filter((timeline) => timeline != id)"
-            :value="timeline"
-          >
-            {{ timeline }}
-          </option>
-        </select>
         <input
           type="checkbox"
           v-model="measurements[id]['passive-stage']"
@@ -91,57 +53,39 @@
         </button>
       </li>
       <li>
+        <label>*current version:</label>
+        <div class="">
+          {{ measurements[id]["*current-version"] }}
+        </div>
+      </li>
+      <li>
+        <label>current version:</label>
+        <div class="">
+          {{ measurements[id]["current-version"] }}
+        </div>
+      </li>
+      <li>
+        <label>current state:</label>
+        <div class="">
+          {{ measurements[id]["current-state"] }}
+        </div>
+      </li>
+      <li>
         <label>accepted version:</label>
         <div class="">
           {{ measurements[id]["accepted-version"] }}
         </div>
       </li>
       <li>
-        <label>*accepted version:</label>
+        <label>acknowledged version:</label>
         <div class="">
-          {{ measurements[id]["encoded-accepted-version"] }}
+          {{ measurements[id]["acknowledged-version"] }}
         </div>
       </li>
       <li>
-        <label>*accepted state:</label>
+        <label>acknowledged state:</label>
         <div class="">
-          {{ measurements[id]["encoded-accepted-state"] }}
-        </div>
-      </li>
-      <li>
-        <label>staged version:</label>
-        <div class="">
-          {{ measurements[id]["staged-version"] }}
-        </div>
-      </li>
-      <li>
-        <label>*staged version:</label>
-        <div class="">
-          {{ measurements[id]["encoded-staged-version"] }}
-        </div>
-      </li>
-      <li>
-        <label>*staged state:</label>
-        <div class="">
-          {{ measurements[id]["encoded-staged-state"] }}
-        </div>
-      </li>
-      <li>
-        <label>global version:</label>
-        <div class="">
-          {{ measurements[id]["global-version"] }}
-        </div>
-      </li>
-      <li>
-        <label>*global version:</label>
-        <div class="">
-          {{ measurements[id]["encoded-global-version"] }}
-        </div>
-      </li>
-      <li>
-        <label>*global state:</label>
-        <div class="">
-          {{ measurements[id]["encoded-global-state"] }}
+          {{ measurements[id]["acknowledged-state"] }}
         </div>
       </li>
     </ul>
@@ -182,26 +126,7 @@ export default defineComponent({
       pullFrom: "",
       pullInto: "",
       measurements: {
-        Alpha: {
-          "global-version": {},
-          "encoded-global-version": [],
-          "encoded-global-state": [],
-          "accepted-version": {},
-          "encoded-accepted-version": [],
-          "encoded-accepted-state": [],
-          "staged-version": {},
-          "encoded-staged-version": [],
-          "encoded-staged-state": [],
-
-          online: true,
-
-          "passive-pull": true,
-          "passive-accept": true, //empty for all
-          "passive-accept-from": [],
-          "passive-stage": true,
-          "passive-state-remote": true,
-          "propogate-global-version": false, // when false it will propogate the accepted version
-        },
+        Alpha: {},
         Bravo: {},
         Charlie: {},
         Delta: {},
@@ -239,120 +164,138 @@ export default defineComponent({
       const encodedVersion = Y.encodeStateVector(doc);
       const encodedState = Y.encodeStateAsUpdate(doc);
 
-      this.measurements[id]["accepted-version"] = version;
-      this.measurements[id]["encoded-accepted-version"] = encodedVersion;
-      this.measurements[id]["encoded-accepted-state"] = encodedState;
-      this.measurements[id]["staged-version"] = version;
-      this.measurements[id]["encoded-staged-version"] = encodedVersion;
-      this.measurements[id]["encoded-staged-state"] = encodedState;
-      this.measurements[id]["global-version"] = version;
-      this.measurements[id]["encoded-global-version"] = encodedVersion;
-      this.measurements[id]["encoded-global-state"] = encodedState;
+      this.measurements[id]["*current-version"] = version;
+      this.measurements[id]["current-version"] = encodedVersion;
+      this.measurements[id]["current-state"] = encodedState;
+      this.measurements[id]["accepted-version"] = encodedVersion;
+      this.measurements[id]["accepted-state"] = encodedState;
+      this.measurements[id]["acknowledged-version"] = encodedVersion;
+      this.measurements[id]["acknowledged-state"] = encodedState;
 
       this.measurements[id]["online"] = false;
       this.measurements[id]["passive-pull"] = true;
-      this.measurements[id]["passive-accept"] = true;
-      this.measurements[id]["passive-accept-from"] = [];
       this.measurements[id]["passive-stage"] = true;
-      this.measurements[id]["passive-stage-remote"] = true;
-      this.measurements[id]["propogate-remote-version"] = false;
     },
     stage: function (id: string) {
       const doc = this.documents()[id].getDoc();
-      this.measurements[id]["staged-version"] = Array.from(
-        doc.store.clients.keys()
-      ).reduce((clock: any, timeline: any) => {
-        return Object.assign(clock, {
-          [(this.ids as any)[timeline]]: (
-            doc.store.clients.get(timeline) as any
-          ).length,
-        });
-      }, {});
-      this.measurements[id]["encoded-staged-version"] =
-        Y.encodeStateVector(doc);
-      this.measurements[id]["encoded-staged-state"] =
-        Y.encodeStateAsUpdate(doc);
+      this.measurements[id]["accepted-version"] = Y.encodeStateVector(doc);
+      this.measurements[id]["accepted-state"] = Y.encodeStateAsUpdate(doc);
 
-      const globalUpdate = Y.diffUpdate(
-        this.measurements[id]["encoded-staged-state"],
-        this.measurements[id]["encoded-global-version"]
+      const update = Y.diffUpdate(
+        this.measurements[id]["accepted-state"],
+        this.measurements[id]["acknowledged-version"]
       );
 
-      this.measurements[id]["encoded-global-state"] = Y.mergeUpdates([
-        this.measurements[id]["encoded-global-state"],
-        globalUpdate,
+      this.measurements[id]["acknowledged-state"] = Y.mergeUpdates([
+        this.measurements[id]["acknowledged-state"],
+        update,
       ]);
 
-      this.measurements[id]["encoded-global-version"] =
+      this.measurements[id]["acknowledged-version"] =
         Y.encodeStateVectorFromUpdate(
-          this.measurements[id]["encoded-global-state"]
+          this.measurements[id]["acknowledged-state"]
         );
     },
     pull: function (into: string) {
-      const from = (this.$refs[`${into}pull`] as any)[0].value;
-      if (this.measurements[from].online) {
-        console.log("merging");
-        this.measurements[into]["encoded-global-state"] = Y.mergeUpdates([
-          this.measurements[into]["encoded-global-state"],
-          this.getUpdates(
-            from,
-            this.measurements[into]["encoded-global-version"]
-          ),
-        ]);
-        this.measurements[into]["encoded-global-version"] =
-          Y.encodeStateVectorFromUpdate(
-            this.measurements[into]["encoded-global-state"]
-          );
-        if (this.measurements[into]["passive-accept"]) {
-          if (
-            this.measurements[into]["passive-accept-from"].includes(from) ||
-            this.measurements[into]["passive-accept-from"].length == 0
-          ) {
-            Y.applyUpdate(
-              this.documents()[into].getDoc(),
-              this.getUpdates(
-                from,
-                this.measurements[into]["encoded-accepted-version"]
-              )
-            );
-          }
-        }
-        if (this.measurements[into]["passive-stage-remote"]) {
-          this.measurements[into]["encoded-staged-state"] = Y.mergeUpdates([
-            this.measurements[into]["encoded-staged-state"],
-            this.getUpdates(
-              from,
-              this.measurements[into]["encoded-staged-version"]
-            ),
-          ]);
-          this.measurements[into]["encoded-staged-verion"] =
-            Y.encodeStateVectorFromUpdate(
-              this.measurements[into]["encoded-staged-state"]
-            );
-        }
-      }
+      const updateCurrent = Y.diffUpdate(
+        this.measurements[into]["acknowledged-state"],
+        this.measurements[into]["current-version"]
+      );
+      const updateAccepted = Y.diffUpdate(
+        this.measurements[into]["acknowledged-state"],
+        this.measurements[into]["accepted-version"]
+      );
+
+      Y.applyUpdate(this.documents()[into].getDoc(), updateCurrent);
+      this.measurements[into]["accepted-state"] = Y.mergeUpdates([
+        this.measurements[into]["accepted-state"],
+        updateAccepted,
+      ]);
+      this.measurements[into]["accepted-version"] =
+        Y.encodeStateVectorFromUpdate(
+          this.measurements[into]["accepted-state"]
+        );
+
+      if (this.measurements[into]["passive-stage"]) this.stage(into);
     },
-    getUpdates: function (from: string, version: Uint8Array): Uint8Array {
-      if (this.measurements[from].online) {
-        if (this.measurements[from]["propogate-global-version"]) {
-          return Y.diffUpdate(
-            this.measurements[from]["encoded-global-state"],
+    toggleOnline: function (id: string) {
+      this.measurements[id]["online"] ? this.disconnect(id) : this.connect(id);
+    },
+    connect: function (id: string) {
+      this.measurements[id]["online"] = true;
+      this.ids
+        .filter((peer: any) => this.measurements[peer].online && peer != id)
+        .forEach((peer: any) => {
+          this.applySync(
+            id,
+            this.getSync(
+              peer,
+              id,
+              this.measurements[id]["acknowledged-version"],
+              false
+            )
+          );
+        });
+    },
+    disconnect: function (id: string) {
+      this.measurements[id]["online"] = false;
+    },
+    getSync: function (
+      from: string, // me
+      into: string, // the one requesting
+      version: Uint8Array, // the version of the one requesting
+      confirmation = true
+    ): Uint8Array {
+      console.log(
+        "getting sync from ",
+        from,
+        " for ",
+        into,
+        " at version ",
+        version
+      );
+      setTimeout(() => {
+        if (!confirmation) {
+          console.log(
+            "need to update myself",
+            this.measurements[from]["acknowledged-version"],
             version
           );
-        } else {
-          return Y.diffUpdate(
-            this.measurements[from]["encoded-staged-state"],
-            version
+          this.applySync(
+            from,
+            this.getSync(
+              into,
+              from,
+              this.measurements[from]["acknowledged-version"]
+            )
           );
         }
-      }
-      throw "The document is not online";
+      }, 0);
+
+      return Y.diffUpdate(this.measurements[from]["accepted-state"], version);
+    },
+    applySync: function (into: string, update: Uint8Array) {
+      console.log(
+        "applying update",
+        update,
+        " to state ",
+        this.measurements[into]["acknowledged-state"]
+      );
+      this.measurements[into]["acknowledged-state"] = Y.mergeUpdates([
+        this.measurements[into]["acknowledged-state"],
+        update,
+      ]);
+      this.measurements[into]["acknowledged-version"] =
+        Y.encodeStateVectorFromUpdate(
+          this.measurements[into]["acknowledged-state"]
+        );
+      if (this.measurements[into]["passive-pull"]) this.pull(into);
     },
 
     /* Setters */
     measure: function (id: string, doc: any) {
       // Accepted
-      this.measurements[id]["accepted-version"] = Array.from(
+      this.measurements[id]["*current-version"] = Array.from(
         doc.store.clients.keys()
       ).reduce((clock: any, timeline: any) => {
         return Object.assign(clock, {
@@ -361,10 +304,8 @@ export default defineComponent({
           ).length,
         });
       }, {});
-      this.measurements[id]["encoded-accepted-version"] =
-        Y.encodeStateVector(doc);
-      this.measurements[id]["encoded-accepted-state"] =
-        Y.encodeStateAsUpdate(doc);
+      this.measurements[id]["current-version"] = Y.encodeStateVector(doc);
+      this.measurements[id]["current-state"] = Y.encodeStateAsUpdate(doc);
 
       //Staging
       if (this.measurements[id]["passive-stage"]) this.stage(id);

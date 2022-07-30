@@ -3,6 +3,7 @@
     <article class="">
       <Document
         :azimuth="id"
+        :ids="ids"
         :measure="measure"
         :ref="id"
         :key="id"
