@@ -32,6 +32,7 @@ module.exports = {
     spacing: {
       before: "1em",
       after: ".595em",
+      0: "1px",
       1: "3px",
       2: "5px",
       3: "8px",

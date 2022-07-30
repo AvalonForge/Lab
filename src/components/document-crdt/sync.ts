@@ -58,7 +58,6 @@ export const sync = (
       apply: (tr, state) => {
         const change = tr.getMeta(SyncPluginKey);
         if (change !== undefined) {
-          console.log("change:", change);
           state = Object.assign({}, state);
           for (const key in change) {
             state[key] = change[key];

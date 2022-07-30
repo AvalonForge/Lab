@@ -120,6 +120,13 @@ select,
   outline: solid 1px #262626;
 }
 
+button.text-sm,
+input.text-sm,
+select.text-sm,
+.clickable.text-sm {
+  @apply py-0 px-1;
+}
+
 button:hover,
 input:hover,
 select:hover,
@@ -131,6 +138,15 @@ button:active,
 select:active,
 .clickable:active {
   @apply shadow-lab-inset;
+}
+
+button.disabled,
+input.disabled,
+select.disabled,
+.clickable {
+  @apply bg-type-glass;
+  box-shadow: none;
+  cursor: default;
 }
 
 *[contenteditable="true"] {

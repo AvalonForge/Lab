@@ -1,9 +1,15 @@
 <template lang="html">
   <main>
     <article class="">
-      <Document :azimuth="id" :ref="id" :key="id" v-for="id in ids" />
+      <Document
+        :azimuth="id"
+        :measure="measure"
+        :ref="id"
+        :key="id"
+        v-for="id in ids"
+      />
     </article>
-    <Notes :documents="documents" :ids="ids" />
+    <Notes :documents="documents" :ids="ids" ref="notes" />
   </main>
 </template>
 
@@ -21,8 +27,14 @@ export default defineComponent({
   },
   data() {
     return {
-      ids: ["Alpha", "Bravo", "Charlie"],
+      ids: ["Alpha", "Bravo", "Charlie", "Delta", "Echo"],
+      measure: () => {
+        //
+      },
     };
+  },
+  mounted: function () {
+    this.measure = (this.$refs["notes"] as any).measure;
   },
   methods: {
     documents: function () {
