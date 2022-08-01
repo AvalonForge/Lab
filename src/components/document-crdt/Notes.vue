@@ -3,8 +3,8 @@
     <h3>Notes</h3>
     <p>
       This is a test of an XML CRDT integration with prosemirror for a fully P2P
-      document system. The goal is to achieve the benifits of a P2P
-      relationship, such as offline editing, security and ownership, without
+      document system. The goal is to achieve the benefits of a P2P
+      relationship, such as offline editing, security, and ownership, without
       sacrificing the uptime of a client-server relationship.
     </p>
     <p>
@@ -13,10 +13,7 @@
     <ul>
       <li>Changes in arbitrary order merge to the same result</li>
       <li>Merged changes preserve intention</li>
-      <li>
-        Someone who makes changes can reasonably expect them to propogate across
-        the network
-      </li>
+      <li>Changes can reasonably expect to propagate across the network</li>
     </ul>
 
     <h3>Soundboard</h3>
