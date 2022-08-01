@@ -14,7 +14,7 @@ import { collab, sendableSteps } from "prosemirror-collab";
 import { keymap } from "prosemirror-keymap";
 
 import * as Y from "yjs";
-import { sync } from "./sync";
+import { sync, SyncPluginKey } from "./sync";
 import { localundo, undo, redo } from "./undo";
 
 import { baseKeymap, buildKeymap } from "@/components/prosemirror/keymap";
@@ -44,7 +44,8 @@ export default defineComponent({
       getView: () => {
         //
       },
-      clock: {} as any,
+      clock: new Map(),
+      deleteSet: null as any,
     };
   },
   mounted: function () {
@@ -59,7 +60,9 @@ export default defineComponent({
       view: () => {
         return {
           update: (view: EditorView) => {
-            this.measure(this.azimuth, doc);
+            if (SyncPluginKey.getState(view.state).snapshot == null) {
+              this.measure(this.azimuth, doc);
+            }
           },
         };
       },
