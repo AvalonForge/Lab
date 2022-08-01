@@ -134,6 +134,11 @@ select:hover,
   @apply shadow-lab;
 }
 
+input[type="range"] {
+  box-shadow: none;
+  outline: none;
+}
+
 button:active,
 select:active,
 .clickable:active {

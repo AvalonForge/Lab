@@ -13,9 +13,84 @@
           <li>
             <button type="button" @click="logView(id)">log view</button>
           </li>
+          <li>
+            <button type="button" @click="logSnapshot(id)">log snapshot</button>
+          </li>
         </ul>
       </li>
     </ul>
+
+    <h3 class="relative">Alpha Snapshot</h3>
+    <ul class="operations-list">
+      <li :style="{ 'align-items': 'start' }">
+        <ul
+          class="operations-list"
+          v-if="
+            measurements['Alpha']['clock'] &&
+            measurements['Alpha']['clock'].keys
+          "
+        >
+          <li class="font-bold">clock</li>
+          <li
+            :key="timeline"
+            v-for="timeline in measurements['Alpha']['clock'].keys()"
+          >
+            {{ timeline }} =>
+            {{ measurements["Alpha"]["snapshot-clock"].get(timeline) }}
+            <input
+              type="range"
+              :style="{ 'min-width': '0px' }"
+              :min="0"
+              :max="measurements['Alpha']['clock'].get(timeline)"
+              :value="measurements['Alpha']['snapshot-clock'].get(timeline)"
+              @input="
+                (event) => {
+                  measurements['Alpha']['snapshot-clock'].set(
+                    timeline,
+                    event.target.value
+                  );
+                  renderPruning();
+                }
+              "
+            />
+          </li>
+        </ul>
+        <ul
+          class="operations-list overflow-auto"
+          :style="{ 'max-height': '180px' }"
+          v-if="
+            measurements['Alpha']['delete-set'] &&
+            measurements['Alpha']['delete-set'].clients
+          "
+        >
+          <li class="font-bold">delete set</li>
+          <div
+            :key="client"
+            v-for="client in Array.from(
+              measurements['Alpha']['delete-set'].clients.keys()
+            )"
+          >
+            <li
+              :key="item.clock"
+              v-for="(item, i) in measurements['Alpha'][
+                'delete-set'
+              ].clients.get(client)"
+            >
+              <input
+                type="checkbox"
+                v-model="
+                  measurements['Alpha']['snapshot-delete-set'][client][i]
+                "
+                class="flex-none"
+                @change="renderPruning()"
+              />
+              {{ client }} => { {{ item.clock }}: {{ item.len }} }
+            </li>
+          </div>
+        </ul>
+      </li>
+    </ul>
+    <div class="" ref="snapshot"></div>
 
     <h3>States:</h3>
     <ul class="operations-list flex-grow" v-for="id in ids" :key="id">
@@ -108,6 +183,13 @@
 import { defineComponent } from "vue";
 
 import * as Y from "yjs";
+import { yDocToProsemirror } from "y-prosemirror";
+import { EditorState, Plugin } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
+import schema from "../prosemirror/schema";
+
+import { SyncPluginKey } from "./sync";
+import { getStateVector } from "./helpers";
 
 export default defineComponent({
   name: "Notes",
@@ -125,6 +207,7 @@ export default defineComponent({
     return {
       pullFrom: "",
       pullInto: "",
+      versionRender: null as any,
       measurements: {
         Alpha: {},
         Bravo: {},
@@ -146,6 +229,60 @@ export default defineComponent({
     },
     logView: function (id: string) {
       console.log(`${id}:`, this.documents()[id].getView());
+    },
+    logSnapshot: function (id: string) {
+      console.log(`${id}:`, Y.snapshot(this.documents()[id].getDoc()));
+    },
+    renderPruning: function () {
+      const filteredDeleteSet = { clients: new Map() };
+      Array.from(
+        this.measurements["Alpha"]["delete-set"].clients.keys()
+      ).forEach((client) => {
+        filteredDeleteSet.clients.set(
+          client,
+          this.measurements["Alpha"]["delete-set"].clients
+            .get(client)
+            .filter(
+              (item: any, i: number) =>
+                this.measurements["Alpha"]["snapshot-delete-set"][
+                  client as any
+                ][i]
+            )
+        );
+      });
+      const snapshot = new Y.Snapshot(
+        filteredDeleteSet,
+        this.measurements["Alpha"]["snapshot-clock"]
+      );
+      //console.log(snapshot);
+      if (
+        Array.from(snapshot.sv).reduce(
+          (acc, client) => acc && client[1] > 0,
+          true
+        )
+      ) {
+        const doc = Y.createDocFromSnapshot(
+          this.documents()["Alpha"].getDoc(),
+          snapshot
+        );
+        if (this.versionRender != null) this.versionRender.destroy();
+        const rendering = yDocToProsemirror(schema, doc);
+        //console.log(rendering);
+
+        const state = EditorState.create({ schema: schema, doc: rendering });
+        this.versionRender = new EditorView(this.$refs["snapshot"] as any, {
+          state,
+          plugins: [
+            new Plugin({
+              props: {
+                editable: () => {
+                  return false;
+                },
+              },
+            }),
+          ],
+        });
+      }
     },
 
     /* State */
@@ -175,6 +312,14 @@ export default defineComponent({
       this.measurements[id]["online"] = false;
       this.measurements[id]["passive-pull"] = true;
       this.measurements[id]["passive-stage"] = true;
+
+      this.measurements[id]["clock"] = getStateVector(doc.store);
+      this.measurements[id]["snapshot-clock"] = getStateVector(doc.store);
+      this.measurements[id]["delete-set"] = Y.createDeleteSetFromStructStore(
+        doc.store
+      );
+      this.measurements[id]["snapshot-delete-set"] =
+        Y.createDeleteSetFromStructStore(doc.store);
     },
     stage: function (id: string) {
       const doc = this.documents()[id].getDoc();
@@ -294,7 +439,7 @@ export default defineComponent({
 
     /* Setters */
     measure: function (id: string, doc: any) {
-      // Accepted
+      // State
       this.measurements[id]["*current-version"] = Array.from(
         doc.store.clients.keys()
       ).reduce((clock: any, timeline: any) => {
@@ -307,8 +452,23 @@ export default defineComponent({
       this.measurements[id]["current-version"] = Y.encodeStateVector(doc);
       this.measurements[id]["current-state"] = Y.encodeStateAsUpdate(doc);
 
-      //Staging
+      // Staging
       if (this.measurements[id]["passive-stage"]) this.stage(id);
+
+      // Clock
+
+      this.measurements[id]["clock"] = getStateVector(doc.store);
+      this.measurements[id]["snapshot-clock"] = getStateVector(doc.store);
+      this.measurements[id]["delete-set"] = Y.createDeleteSetFromStructStore(
+        doc.store
+      );
+      this.measurements[id]["snapshot-delete-set"] = Array.from(
+        this.measurements[id]["delete-set"].clients.keys()
+      ).map((key: any) => {
+        const timeline = this.measurements[id]["delete-set"].clients.get(key);
+        return timeline.map((item: any) => true);
+      });
+      if (id == "Alpha") this.renderPruning();
     },
 
     /* Global */

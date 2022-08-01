@@ -4,6 +4,15 @@ import { Node } from "prosemirror-model";
 import { SyncPluginKey, UserColor } from "./sync";
 import { ProsemirrorBinding } from "./binding";
 
+export function getStateVector(store: any) {
+  const sm = new Map();
+  store.clients.forEach((structs: any, client: any) => {
+    const struct = structs[structs.length - 1];
+    sm.set(client, struct.id.clock + struct.length);
+  });
+  return sm;
+}
+
 export const absolutePositionToRelativePosition = (
   pos: number,
   type: any,
