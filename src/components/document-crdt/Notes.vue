@@ -56,7 +56,8 @@
           </li>
         </ul>
         <ul
-          class="operations-list"
+          class="operations-list overflow-auto"
+          :style="{ 'max-height': '180px' }"
           v-if="
             measurements['Alpha']['delete-set'] &&
             measurements['Alpha']['delete-set'].clients
@@ -81,7 +82,7 @@
                   measurements['Alpha']['snapshot-delete-set'][client][i]
                 "
                 class="flex-none"
-                @click="logDeleteItem(client, i)"
+                @change="renderPruning()"
               />
               {{ client }} => { {{ item.clock }}: {{ item.len }} }
             </li>
@@ -233,12 +234,27 @@ export default defineComponent({
       console.log(`${id}:`, Y.snapshot(this.documents()[id].getDoc()));
     },
     renderPruning: function () {
-      const filteredDeleteSet = this.measurements["Alpha"]["delete-set"];
+      const filteredDeleteSet = { clients: new Map() };
+      Array.from(
+        this.measurements["Alpha"]["delete-set"].clients.keys()
+      ).forEach((client) => {
+        filteredDeleteSet.clients.set(
+          client,
+          this.measurements["Alpha"]["delete-set"].clients
+            .get(client)
+            .filter(
+              (item: any, i: number) =>
+                this.measurements["Alpha"]["snapshot-delete-set"][
+                  client as any
+                ][i]
+            )
+        );
+      });
       const snapshot = new Y.Snapshot(
         filteredDeleteSet,
         this.measurements["Alpha"]["snapshot-clock"]
       );
-      console.log(snapshot);
+      //console.log(snapshot);
       if (
         Array.from(snapshot.sv).reduce(
           (acc, client) => acc && client[1] > 0,
@@ -251,7 +267,7 @@ export default defineComponent({
         );
         if (this.versionRender != null) this.versionRender.destroy();
         const rendering = yDocToProsemirror(schema, doc);
-        console.log(rendering);
+        //console.log(rendering);
 
         const state = EditorState.create({ schema: schema, doc: rendering });
         this.versionRender = new EditorView(this.$refs["snapshot"] as any, {
@@ -452,13 +468,7 @@ export default defineComponent({
         const timeline = this.measurements[id]["delete-set"].clients.get(key);
         return timeline.map((item: any) => true);
       });
-      console.log(this.measurements[id]["snapshot-clock"]);
-      console.log(this.measurements[id]["snapshot-delete-set"]);
-    },
-    logDeleteItem: function (client: any, i: any) {
-      console.log(this.measurements["Alpha"]["snapshot-delete-set"]);
-      console.log(this.measurements["Alpha"]["snapshot-delete-set"][client]);
-      console.log(this.measurements["Alpha"]["snapshot-delete-set"][client][i]);
+      if (id == "Alpha") this.renderPruning();
     },
 
     /* Global */
