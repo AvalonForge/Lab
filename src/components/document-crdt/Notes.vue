@@ -1,5 +1,21 @@
 <template lang="html">
   <aside class="">
+    <h3>Notes</h3>
+    <p>
+      This is a test of an XML CRDT integration with prosemirror for a fully P2P
+      document system. The goal is to achieve the benefits of a P2P
+      relationship, such as offline editing, security, and ownership, without
+      sacrificing the uptime of a client-server relationship.
+    </p>
+    <p>
+      <strong>Characteristics:</strong>
+    </p>
+    <ul>
+      <li>Changes in arbitrary order merge to the same result</li>
+      <li>Merged changes preserve intention</li>
+      <li>Changes can reasonably expect to propagate across the network</li>
+    </ul>
+
     <h3>Soundboard</h3>
     <ul class="operations-list">
       <li class="">
@@ -163,18 +179,6 @@
           {{ measurements[id]["acknowledged-state"] }}
         </div>
       </li>
-    </ul>
-
-    <h3>Notes</h3>
-    <p>This is a live test of a Xml based CRDT integration with prosemirror.</p>
-    <p>
-      <strong>Characteristics:</strong>
-    </p>
-    <ul>
-      <li>Changes in arbitrary order merge to the same result</li>
-      <li>Merged changes preserve intention</li>
-      <li>Documents can propogate all known changes, regardless of source</li>
-      <li>Documents can programmatically accept / reject changes</li>
     </ul>
   </aside>
 </template>
@@ -376,8 +380,22 @@ export default defineComponent({
             this.getSync(
               peer,
               id,
-              this.measurements[id]["acknowledged-version"],
-              false
+              this.measurements[id]["acknowledged-version"]
+            )
+          );
+        });
+    },
+    send: function (id: string) {
+      console.log("sending");
+      this.ids
+        .filter((peer: any) => this.measurements[peer].online && peer != id)
+        .forEach((peer: any) => {
+          this.applySync(
+            peer,
+            this.getSync(
+              id,
+              peer,
+              this.measurements[peer]["acknowledged-version"]
             )
           );
         });
@@ -401,11 +419,6 @@ export default defineComponent({
       );
       setTimeout(() => {
         if (!confirmation) {
-          console.log(
-            "need to update myself",
-            this.measurements[from]["acknowledged-version"],
-            version
-          );
           this.applySync(
             from,
             this.getSync(
@@ -440,6 +453,7 @@ export default defineComponent({
     /* Setters */
     measure: function (id: string, doc: any) {
       // State
+      const oldVersion = this.measurements[id]["*current-version"];
       this.measurements[id]["*current-version"] = Array.from(
         doc.store.clients.keys()
       ).reduce((clock: any, timeline: any) => {
@@ -449,26 +463,48 @@ export default defineComponent({
           ).length,
         });
       }, {});
-      this.measurements[id]["current-version"] = Y.encodeStateVector(doc);
-      this.measurements[id]["current-state"] = Y.encodeStateAsUpdate(doc);
-
-      // Staging
-      if (this.measurements[id]["passive-stage"]) this.stage(id);
-
-      // Clock
-
-      this.measurements[id]["clock"] = getStateVector(doc.store);
-      this.measurements[id]["snapshot-clock"] = getStateVector(doc.store);
-      this.measurements[id]["delete-set"] = Y.createDeleteSetFromStructStore(
-        doc.store
+      console.log(
+        !Object.keys(this.measurements[id]["*current-version"]).reduce(
+          (acc, key) =>
+            acc &&
+            oldVersion[key] == this.measurements[id]["*current-version"][key],
+          true
+        )
       );
-      this.measurements[id]["snapshot-delete-set"] = Array.from(
-        this.measurements[id]["delete-set"].clients.keys()
-      ).map((key: any) => {
-        const timeline = this.measurements[id]["delete-set"].clients.get(key);
-        return timeline.map((item: any) => true);
-      });
-      if (id == "Alpha") this.renderPruning();
+      if (
+        !Object.keys(this.measurements[id]["*current-version"]).reduce(
+          (acc, key) =>
+            acc &&
+            oldVersion[key] == this.measurements[id]["*current-version"][key],
+          true
+        )
+      ) {
+        this.measurements[id]["current-version"] = Y.encodeStateVector(doc);
+        this.measurements[id]["current-state"] = Y.encodeStateAsUpdate(doc);
+
+        // Staging
+        if (this.measurements[id]["passive-stage"]) this.stage(id);
+
+        // Clock
+
+        this.measurements[id]["clock"] = getStateVector(doc.store);
+        this.measurements[id]["snapshot-clock"] = getStateVector(doc.store);
+        this.measurements[id]["delete-set"] = Y.createDeleteSetFromStructStore(
+          doc.store
+        );
+        this.measurements[id]["snapshot-delete-set"] = Array.from(
+          this.measurements[id]["delete-set"].clients.keys()
+        ).map((key: any) => {
+          const timeline = this.measurements[id]["delete-set"].clients.get(key);
+          return timeline.map((item: any) => true);
+        });
+        if (id == "Alpha") this.renderPruning();
+        if (
+          this.measurements[id]["online"] &&
+          this.measurements[id]["passive-stage"]
+        )
+          this.send(id);
+      }
     },
 
     /* Global */
