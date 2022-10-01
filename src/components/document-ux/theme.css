@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap");
+
+main {
+  /* Fundemental Variables */
+  --root-frequency: 1em;
+  --ratio: 2;
+  --root-font-family: "Rubik";
+  --leading: 1.259em;
+
+  /* Colours */
+  --paper-color: var(--rlm-card-color, #fafbfb); /* From Realm */
+  --type-color: var(--rlm-text-color, #261f1f); /* From Realm */
+  --base-color: var(--rlm-base-color, #b4bdc2); /* From Realm */
+  --border-color: var(--rlm-border-color, #d0d7da); /* From Realm */
+  --window-color: var(--rlm-window-color, #eceff0); /* From Realm */
+
+  /* Structural */
+  --document-width: 60ch;
+
+  /* Headings */
+  --heading-font-family: "Rubik";
+  --heading-font-weight: 700;
+
+  /* Code */
+  --code-font-family: "JetBrains Mono", monospace;
+}

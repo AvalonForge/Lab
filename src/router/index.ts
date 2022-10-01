@@ -55,13 +55,23 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/document-ux",
+    name: "Document UX",
+    component: () => import("@/views/document-ux.vue"),
+    meta: {
+      dev: true,
+      timestamp: "09.30.22",
+      live: true,
+    },
+  },
+  {
     path: "/document-crdt",
     name: "Document CRDT",
     component: () => import("@/views/document-crdt.vue"),
     meta: {
       dev: true,
       timestamp: "07.21.22",
-      live: true,
+      live: false,
     },
   },
   {

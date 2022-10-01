@@ -1,0 +1,83 @@
+/* Structure */
+.ProseMirror {
+  font-size: var(--root-frequency);
+  font-family: var(--root-font-family);
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+blockquote,
+pre,
+ul,
+ol,
+img,
+table {
+  line-height: var(--leading);
+  margin-top: var(--leading);
+  margin-bottom: calc(var(--leading) / var(--ratio));
+}
+
+/* Nodes */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+hr {
+  border-top: 2px solid var(--type-color);
+  opacity: 25%;
+}
+
+blockquote {
+  border-left: 3px solid var(--type-color);
+}
+
+pre {
+  padding: 2ch 3ch;
+  background: var(--border-color);
+  color: var(--type-color);
+  font-family: var(--code-font-family);
+}
+
+li > ol,
+li > ul {
+  margin-left: 1ch;
+  margin-top: calc(var(--leading) / var(--ratio));
+}
+
+li > :first-child {
+  display: inline-block;
+  margin-top: 0;
+}
+
+/* Marks */
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+u {
+  text-decoration: underline;
+}
+
+s {
+  text-decoration: line-through;
+}
+
+code {
+  @apply px-2 rounded-1;
+  background-color: var(--border-color);
+}
