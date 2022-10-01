@@ -1,6 +1,7 @@
 import { keymap } from "prosemirror-keymap";
-import { Plugin, Command } from "prosemirror-state";
+import { Plugin } from "prosemirror-state";
 import {
+  Command,
   chainCommands,
   createParagraphNear,
   liftEmptyBlock,

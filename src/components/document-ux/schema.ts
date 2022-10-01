@@ -14,12 +14,12 @@ const schema = new Schema({
   nodes: {
     // Document
     doc: {
-      //content: "header block+",
-      content: "block+",
+      content: "header block+",
+      //content: "block+",
     } as NodeSpec,
-    /*
+
     header: {
-      content: "config title description{0,1}",
+      content: "title style{0, 1} preview{0, 1} description{0,1}",
       group: "header",
       parseDOM: [{ tag: "header" }],
       toDOM() {
@@ -28,16 +28,63 @@ const schema = new Schema({
       selectable: false,
     } as NodeSpec,
 
-    //config: ConfigSpec as NodeSpec,
-    //configfield: ConfigTermSpec as NodeSpec,
+    property: {
+      content: "text*",
+      group: "property",
+      attrs: {
+        type: { default: "text" },
+        key: { default: "" },
+        display: { default: "" },
+      },
+      parseDOM: [
+        {
+          tag: "dt",
+          getAttrs(dom: string | HTMLElement) {
+            return {
+              type: (dom as HTMLElement).getAttribute("property-type"),
+              key: (dom as HTMLElement).getAttribute("property-key"),
+              display: (dom as HTMLElement).getAttribute("property-display"),
+            };
+          },
+        },
+      ],
+      toDOM(node) {
+        return [
+          "dt",
+          {
+            "property-type": node.attrs.type,
+            "property-key": node.attrs.key,
+            "property-display": node.attrs.display,
+          },
+        ];
+      },
+    },
+
+    style: {
+      content: "property*",
+      group: "config",
+      parseDOM: [{ tag: `dl[data-type="style"]` }],
+      toDOM() {
+        return ["dl", { "data-type": "style" }, 0];
+      },
+    } as NodeSpec,
+
+    preview: {
+      content: "property*",
+      group: "config",
+      parseDOM: [{ tag: `dl[data-type="preview"]` }],
+      toDOM() {
+        return ["dl", { "data-type": "preview" }, 0];
+      },
+    },
 
     // Title
     title: {
       content: "text*",
       group: "title",
-      parseDOM: [{ tag: `h1[data-type="header"]` }],
+      parseDOM: [{ tag: `h1[data-type="title"]` }],
       toDOM() {
-        return ["h1", { "data-type": "header" }, 0] as DOMOutputSpec;
+        return ["h1", { "data-type": "title" }, 0] as DOMOutputSpec;
       },
       selectable: true,
     },
@@ -46,13 +93,12 @@ const schema = new Schema({
     description: {
       content: "inline*",
       group: "description",
-      parseDOM: [{ tag: `p[data-type="header"]` }],
+      parseDOM: [{ tag: `div[data-type="description"]` }],
       toDOM() {
-        return ["p", { "data-type": "header" }, 0] as DOMOutputSpec;
+        return ["div", { "data-type": "description" }, 0] as DOMOutputSpec;
       },
       selectable: true,
     },
-    */
 
     /* Block ================================================================ */
     // Paragraph
@@ -172,48 +218,6 @@ const schema = new Schema({
       },
     } as NodeSpec,
 
-    // Check List Item
-    /*
-      TODO: Create a way for check state to propogate.
-      Using a mark seems to make the most sense, thought it would have to be designed in a wonky way
-    */
-    /*
-    checklistitem: {
-      attrs: { checked: { default: false } },
-      parseDOM: [{ tag: `li[data-type="checklist"]` }],
-      toDOM(node) {
-        return [
-          "li",
-          { "data-type": "checklist" },
-          [
-            "label",
-            [
-              "input",
-              {
-                type: "checkbox",
-                value: node.attrs.checked,
-              },
-            ],
-            ["span"],
-          ],
-          ["div", 0],
-        ];
-      },
-      defining: true,
-      content: "paragraph block*",
-    } as NodeSpec,
-
-    //Unordered List
-    "check-list": {
-      group: "block",
-      content: "checklistitem+",
-      parseDOM: [{ tag: `ul[data-type="checklist"]` }],
-      toDOM() {
-        return ["ul", { "data-type": "checklist" }, 0];
-      },
-    } as NodeSpec,
-    */
-
     /* Inline =============================================================== */
     // Hard Bread
     "hard-break": {
@@ -244,12 +248,12 @@ const schema = new Schema({
       parseDOM: [
         {
           tag: "img[src]",
-          getAttrs(dom: HTMLElement) {
+          getAttrs(dom: string | HTMLElement) {
             return {
-              src: dom.getAttribute("src"),
-              title: dom.getAttribute("title"),
-              alt: dom.getAttribute("alt"),
-              height: dom.getAttribute("height"),
+              src: (dom as HTMLElement).getAttribute("src"),
+              title: (dom as HTMLElement).getAttribute("title"),
+              alt: (dom as HTMLElement).getAttribute("alt"),
+              height: (dom as HTMLElement).getAttribute("height"),
             };
           },
         },
