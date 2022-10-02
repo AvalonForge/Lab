@@ -12,11 +12,18 @@ export const protectedBlocks = new Set(["paragraph"]);
 
 const schema = new Schema({
   nodes: {
-    // Document
+    // Fundemental -------------------------------------------------------------
     doc: {
       content: "header block+",
       //content: "block+",
     } as NodeSpec,
+
+    // Text
+    text: {
+      group: "inline",
+    } as NodeSpec,
+
+    // Header ------------------------------------------------------------------
 
     header: {
       content: "title style{0, 1} preview{0, 1} description{0,1}",
@@ -82,9 +89,10 @@ const schema = new Schema({
     title: {
       content: "text*",
       group: "title",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: `h1[data-type="title"]` }],
-      toDOM() {
-        return ["h1", { "data-type": "title" }, 0] as DOMOutputSpec;
+      toDOM(node) {
+        return ["h1", { "data-type": "title", ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
       },
       selectable: true,
     },
@@ -93,21 +101,23 @@ const schema = new Schema({
     description: {
       content: "inline*",
       group: "description",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: `div[data-type="description"]` }],
-      toDOM() {
-        return ["div", { "data-type": "description" }, 0] as DOMOutputSpec;
+      toDOM(node) {
+        return ["div", { "data-type": "description", ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
       },
       selectable: true,
     },
 
-    /* Block ================================================================ */
+    // Blocks ------------------------------------------------------------------
     // Paragraph
     paragraph: {
       content: "inline*",
       group: "block",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: "p" }],
-      toDOM() {
-        return ["p", 0] as DOMOutputSpec;
+      toDOM(node) {
+        return ["p", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
       },
     } as NodeSpec,
 
@@ -115,7 +125,7 @@ const schema = new Schema({
     heading: {
       content: "inline*",
       group: "block",
-      attrs: { level: { default: 1 } },
+      attrs: { level: { default: 1 }, id: { default: null } },
       parseDOM: [
         { tag: "h1", attrs: { level: 1 } },
         { tag: "h2", attrs: { level: 2 } },
@@ -125,7 +135,7 @@ const schema = new Schema({
         { tag: "h6", attrs: { level: 6 } },
       ],
       toDOM(node) {
-        return [`h${node.attrs.level}`, 0] as DOMOutputSpec;
+        return [`h${node.attrs.level}`, { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
       },
       defining: true,
     } as NodeSpec,
@@ -134,9 +144,10 @@ const schema = new Schema({
     blockquote: {
       content: "block+",
       group: "block",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: "blockquote" }],
-      toDOM() {
-        return ["blockquote", 0];
+      toDOM(node) {
+        return ["blockquote", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
       defining: true,
     } as NodeSpec,
@@ -145,50 +156,41 @@ const schema = new Schema({
     "code-block": {
       content: "text*",
       group: "block",
+      attrs: { id: { default: null } },
       code: true,
       defining: true,
       parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
-      toDOM() {
-        return ["pre", 0];
+      toDOM(node) {
+        return ["pre",{ ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as NodeSpec,
-
-    // Caption
-    /*
-    caption: {
-      content: "text*",
-      parseDOM: [{ tag: "figcaption" }],
-      toDOM() {
-        return ["figcaption", 0];
-      },
-      atom: false,
-    },
-    */
 
     /// A horizontal rule (`<hr>`).
     "horizontal-rule": {
       group: "block",
       parseDOM: [{ tag: "hr" }],
-      toDOM() {
-        return ["hr"];
+      attrs: { id: { default: null } },
+      toDOM(node) {
+        return ["hr", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }];
       },
     } as NodeSpec,
 
     // List Item
     li: {
+      content: "paragraph block*",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: "li" }],
-      toDOM() {
-        return ["li", 0];
+      toDOM(node) {
+        return ["li", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
       defining: true,
-      content: "paragraph block*",
     } as NodeSpec,
 
     // Ordered List
     "ordered-list": {
       group: "block",
       content: "li+",
-      attrs: { order: { default: 1 } },
+      attrs: { order: { default: 1 }, id: { default: null } },
       parseDOM: [
         {
           tag: "ol",
@@ -202,9 +204,7 @@ const schema = new Schema({
         },
       ],
       toDOM(node) {
-        return node.attrs.order == 1
-          ? ["ol", 0]
-          : ["ol", { start: node.attrs.order }, 0];
+        return ["ol", { ...(node.attrs.order ? { start: node.attrs.order } : {} ), ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0]
       },
     } as NodeSpec,
 
@@ -212,31 +212,13 @@ const schema = new Schema({
     "unordered-list": {
       group: "block",
       content: "li+",
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: "ul" }],
-      toDOM() {
-        return ["ul", 0];
+      toDOM(node) {
+        return ["ul", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as NodeSpec,
 
-    /* Inline =============================================================== */
-    // Hard Bread
-    "hard-break": {
-      inline: true,
-      group: "inline",
-      selectable: false,
-      parseDOM: [{ tag: "br" }],
-      toDOM() {
-        return ["br"];
-      },
-    } as NodeSpec,
-
-    // Text
-    text: {
-      group: "inline",
-    } as NodeSpec,
-
-    /* Complex ============================================================== */
-    // Image
     image: {
       group: "block",
       attrs: {
@@ -244,6 +226,7 @@ const schema = new Schema({
         alt: { default: null },
         title: { default: null },
         height: { default: null },
+        id: { default: null },
       },
       parseDOM: [
         {
@@ -268,29 +251,29 @@ const schema = new Schema({
             ...(node.attrs.height
               ? { style: { height: node.attrs.height + "px" } }
               : {}),
+            ...(node.attrs.id ? { id: node.attrs.id } : {})
           },
         ];
       },
     },
 
-    // Figure =============================================================== */
-    // how we embed content from other docs
-    /*
-    figure: {
-      group: "block",
-      content: "(block caption)+",
-      parseDOM: [{ tag: "figure" }],
-      atom: true,
-      toDOM(node) {
-        return ["figure", 0];
+    // Inline ------------------------------------------------------------------
+    // Hard Bread
+    "hard-break": {
+      inline: true,
+      group: "inline",
+      selectable: false,
+      parseDOM: [{ tag: "br" }],
+      toDOM() {
+        return ["br"];
       },
     } as NodeSpec,
-    */
   },
   marks: {
     /* Basic ================================================================ */
     // Italic
     italic: {
+      attrs: { id: { default: null } },
       parseDOM: [{ tag: "i" }, { tag: "em" }, { style: "font-style=italic" }],
       toDOM() {
         return ["em", 0];
@@ -299,6 +282,7 @@ const schema = new Schema({
 
     // Bold
     strong: {
+      attrs: { id: { default: null } },
       parseDOM: [
         { tag: "strong" },
         {
@@ -312,13 +296,14 @@ const schema = new Schema({
             /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null,
         },
       ],
-      toDOM() {
-        return ["strong", 0];
+      toDOM(node) {
+        return ["strong", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
 
     // Underline
     underline: {
+      attrs: { id: { default: null } },
       parseDOM: [
         { tag: "u" },
         {
@@ -328,13 +313,14 @@ const schema = new Schema({
             (style as string).includes("underline") ? {} : false,
         },
       ],
-      toDOM() {
-        return ["u", 0];
+      toDOM(node) {
+        return ["u", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
 
     // Strike
     strike: {
+      attrs: { id: { default: null } },
       parseDOM: [
         {
           tag: "s",
@@ -352,64 +338,41 @@ const schema = new Schema({
             (style as string).includes("line-through") ? {} : false,
         },
       ],
-      toDOM() {
-        return ["s", 0];
+      toDOM(node) {
+        return ["s", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
 
     // Code
     code: {
+      attrs: { id: { default: null } },
       code: true,
       parseDOM: [
         {
           tag: "code",
         },
       ],
-      toDOM() {
-        return ["code", 0];
+      toDOM(node) {
+        return ["code", { ...(node.attrs.id ? { id: node.attrs.id } : {}) } 0];
       },
     } as MarkSpec,
 
-    /* links ================================================================ */
+    // Hypertext ---------------------------------------------------------------
     // Web2 Hyperlink
     hyperlink: {
       attrs: { href: { default: "" }, target: { default: "_blank" } },
       parseDOM: [{ tag: 'a[href]:not([href *= "javascript:" i])' }],
       toDOM(node) {
-        return ["a", { href: node.attrs.href, target: node.attrs.target }, 0];
+        return ["a", { href: node.attrs.href, target: node.attrs.target, ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
-
-    // Engram Concept Link
-    /*
-    concept: {
-      attrs: { title: { default: "" } },
-      parseDOM: [{ tag: "abbr" }],
-      toDOM(node) {
-        return ["abbr", { title: node.attrs.concept }, 0];
-      },
-    } as MarkSpec,
-    */
 
     // Comment Link
     comment: {
-      attrs: { comment: { default: "" } },
+      attrs: { comment: { default: "" }, id: { default: null } },
       parseDOM: [{ tag: "mark" }],
       toDOM(node) {
-        return [
-          "mark",
-          { concept: node.attrs.concept, title: node.attrs.concept },
-          0,
-        ];
-      },
-    } as MarkSpec,
-
-    // Azimuth
-    azimuth: {
-      attrs: { aref: { default: "" } },
-      parseDOM: [{ tag: 'a[aref]:not([aref *= "javascript:" i])' }],
-      toDOM(node) {
-        return ["a", { aref: node.attrs.src }, 0];
+        return ["mark", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
   },

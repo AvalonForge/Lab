@@ -88,7 +88,7 @@ export default inputRules({
     horizontalRuleRule,
     codeBlockRule,
     orderedListRule,
-    unorderedListRule
+    unorderedListRule,
     // Marks
     boldRule,
     italicRule,
