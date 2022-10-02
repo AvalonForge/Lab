@@ -23,13 +23,19 @@ export const createNodeNear: (node: NodeType) => Command =
   (node) => (state, dispatch?) => {
     const sel = state.selection,
       { $from, $to } = sel;
+    /*
     if (
       sel instanceof AllSelection ||
       $from.parent.inlineContent ||
       $to.parent.inlineContent
-    )
+    ) {
+      console.log("something about inline content");
       return false;
-    if (!node || !node.isTextblock) return false;
+    }
+    */
+
+    if (!node) return false;
+    console.log("here");
     if (dispatch) {
       const side = (
         !$from.parentOffset && $to.index() < $to.parent.childCount ? $from : $to

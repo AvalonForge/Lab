@@ -1,13 +1,13 @@
 <template lang="html">
   <article ref="article">
-    <div class="context-menu">
-      <component :is="menu" />
-    </div>
+    <ContextMenuNode v-if="menu" :menu="menu" :view="view" />
   </article>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import ContextMenuNode from "./ContextMenuNode.vue";
+import { ContextMenu } from "./contextmenu";
 
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
@@ -15,20 +15,33 @@ import schema from "./schema";
 import keymap from "./keymap";
 import shortcuts from "./shortcuts";
 
+import { slashmenu } from "./slashmenu";
+
 export default defineComponent({
   name: "Document",
+  components: {
+    ContextMenuNode,
+  },
   data: function () {
     return {
-      menu: null,
+      menu: null as null | ContextMenu,
+      menuKey: 0,
+      view: null as any,
     };
   },
   mounted: function () {
     console.log("Mounted Document");
     const state = EditorState.create({
       schema: schema,
-      plugins: [keymap, shortcuts],
+      plugins: [
+        keymap,
+        shortcuts,
+        slashmenu((newMenu: ContextMenu | null) => {
+          this.menu = newMenu;
+        }),
+      ],
     });
-    const view = new EditorView(this.$refs["article"] as any, {
+    this.view = new EditorView(this.$refs["article"] as any, {
       state: state,
       plugins: [],
     });

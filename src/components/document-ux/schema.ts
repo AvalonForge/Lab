@@ -92,7 +92,14 @@ const schema = new Schema({
       attrs: { id: { default: null } },
       parseDOM: [{ tag: `h1[data-type="title"]` }],
       toDOM(node) {
-        return ["h1", { "data-type": "title", ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
+        return [
+          "h1",
+          {
+            "data-type": "title",
+            ...(node.attrs.id ? { id: node.attrs.id } : {}),
+          },
+          0,
+        ] as DOMOutputSpec;
       },
       selectable: true,
     },
@@ -104,7 +111,14 @@ const schema = new Schema({
       attrs: { id: { default: null } },
       parseDOM: [{ tag: `div[data-type="description"]` }],
       toDOM(node) {
-        return ["div", { "data-type": "description", ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
+        return [
+          "div",
+          {
+            "data-type": "description",
+            ...(node.attrs.id ? { id: node.attrs.id } : {}),
+          },
+          0,
+        ] as DOMOutputSpec;
       },
       selectable: true,
     },
@@ -117,7 +131,11 @@ const schema = new Schema({
       attrs: { id: { default: null } },
       parseDOM: [{ tag: "p" }],
       toDOM(node) {
-        return ["p", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
+        return [
+          "p",
+          { ...(node.attrs.id ? { id: node.attrs.id } : {}) },
+          0,
+        ] as DOMOutputSpec;
       },
     } as NodeSpec,
 
@@ -135,7 +153,11 @@ const schema = new Schema({
         { tag: "h6", attrs: { level: 6 } },
       ],
       toDOM(node) {
-        return [`h${node.attrs.level}`, { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0] as DOMOutputSpec;
+        return [
+          `h${node.attrs.level}`,
+          { ...(node.attrs.id ? { id: node.attrs.id } : {}) },
+          0,
+        ] as DOMOutputSpec;
       },
       defining: true,
     } as NodeSpec,
@@ -147,7 +169,11 @@ const schema = new Schema({
       attrs: { id: { default: null } },
       parseDOM: [{ tag: "blockquote" }],
       toDOM(node) {
-        return ["blockquote", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
+        return [
+          "blockquote",
+          { ...(node.attrs.id ? { id: node.attrs.id } : {}) },
+          0,
+        ];
       },
       defining: true,
     } as NodeSpec,
@@ -161,7 +187,7 @@ const schema = new Schema({
       defining: true,
       parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
       toDOM(node) {
-        return ["pre",{ ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
+        return ["pre", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as NodeSpec,
 
@@ -204,7 +230,14 @@ const schema = new Schema({
         },
       ],
       toDOM(node) {
-        return ["ol", { ...(node.attrs.order ? { start: node.attrs.order } : {} ), ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0]
+        return [
+          "ol",
+          {
+            ...(node.attrs.order ? { start: node.attrs.order } : {}),
+            ...(node.attrs.id ? { id: node.attrs.id } : {}),
+          },
+          0,
+        ];
       },
     } as NodeSpec,
 
@@ -251,7 +284,7 @@ const schema = new Schema({
             ...(node.attrs.height
               ? { style: { height: node.attrs.height + "px" } }
               : {}),
-            ...(node.attrs.id ? { id: node.attrs.id } : {})
+            ...(node.attrs.id ? { id: node.attrs.id } : {}),
           },
         ];
       },
@@ -297,7 +330,11 @@ const schema = new Schema({
         },
       ],
       toDOM(node) {
-        return ["strong", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
+        return [
+          "strong",
+          { ...(node.attrs.id ? { id: node.attrs.id } : {}) },
+          0,
+        ];
       },
     } as MarkSpec,
 
@@ -353,7 +390,7 @@ const schema = new Schema({
         },
       ],
       toDOM(node) {
-        return ["code", { ...(node.attrs.id ? { id: node.attrs.id } : {}) } 0];
+        return ["code", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
       },
     } as MarkSpec,
 
@@ -363,7 +400,15 @@ const schema = new Schema({
       attrs: { href: { default: "" }, target: { default: "_blank" } },
       parseDOM: [{ tag: 'a[href]:not([href *= "javascript:" i])' }],
       toDOM(node) {
-        return ["a", { href: node.attrs.href, target: node.attrs.target, ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
+        return [
+          "a",
+          {
+            href: node.attrs.href,
+            target: node.attrs.target,
+            ...(node.attrs.id ? { id: node.attrs.id } : {}),
+          },
+          0,
+        ];
       },
     } as MarkSpec,
 
