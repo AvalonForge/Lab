@@ -68,6 +68,45 @@ export const slashmenu = (pushMenu: (newMenu: ContextMenu | null) => void) => {
   });
 };
 
+export class SlashMenu extends ContextMenu {
+  run: (handler: (props: { view: EditorView; search: string }) => void) => void;
+
+  constructor(
+    execute: (
+      handler: (props: { view: EditorView; search: string }) => void
+    ) => void,
+    top: number,
+    left: number,
+    items: Array<MenuItem>,
+    width?: number,
+    height?: number,
+    search?: string
+  ) {
+    super(top, left, items, width, height, search);
+    this.run = execute;
+  }
+
+  update({
+    top,
+    left,
+    search,
+  }: {
+    top?: number;
+    left?: number;
+    search: string;
+  }): ContextMenu {
+    return new SlashMenu(
+      this.run,
+      top ? top : this.top,
+      left ? left : this.left,
+      this.items,
+      this.width,
+      this.height,
+      search ? search : this.search
+    );
+  }
+}
+
 export const SlashMenuSuggestions = {
   paragraph: new MenuItem({
     key: "paragraph",
@@ -117,6 +156,24 @@ export const SlashMenuSuggestions = {
       wrapIn(schema.nodes.blockquote)(props.view.state, props.view.dispatch);
     },
   }),
+  hr: new MenuItem({
+    key: "hr",
+    title: "Horizontal Rule",
+    icon: "i",
+    description: "",
+    handler: (props: { view: EditorView; search: string }) => {
+      const tr = props.view.state.tr.delete(
+        props.view.state.selection.from - props.search.length - 1,
+        props.view.state.selection.from
+      );
+      props.view.dispatch(tr);
+      console.log(props.view.state.selection);
+      createNodeNear(schema.nodes["horizontal-rule"])(
+        props.view.state,
+        props.view.dispatch
+      );
+    },
+  }),
   image: new MenuItem({
     key: "img",
     title: "Image",
@@ -133,42 +190,3 @@ export const SlashMenuSuggestions = {
     },
   }),
 };
-
-export class SlashMenu extends ContextMenu {
-  run: (handler: (props: { view: EditorView; search: string }) => void) => void;
-
-  constructor(
-    execute: (
-      handler: (props: { view: EditorView; search: string }) => void
-    ) => void,
-    top: number,
-    left: number,
-    items: Array<MenuItem>,
-    width?: number,
-    height?: number,
-    search?: string
-  ) {
-    super(top, left, items, width, height, search);
-    this.run = execute;
-  }
-
-  update({
-    top,
-    left,
-    search,
-  }: {
-    top?: number;
-    left?: number;
-    search: string;
-  }): ContextMenu {
-    return new SlashMenu(
-      this.run,
-      top ? top : this.top,
-      left ? left : this.left,
-      this.items,
-      this.width,
-      this.height,
-      search ? search : this.search
-    );
-  }
-}

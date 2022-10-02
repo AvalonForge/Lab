@@ -34,6 +34,8 @@ h6 {
 }
 
 hr {
+  margin-bottom: var(--leading);
+  margin-top: var(--leading);
   border-top: 2px solid var(--type-color);
   opacity: 25%;
 }
@@ -58,6 +60,11 @@ li > ul {
 li > :first-child {
   display: inline-block;
   margin-top: 0;
+}
+
+img::selection {
+  outline: 2px solid var(--type-color);
+  background-color: #00000000;
 }
 
 /* Marks */

@@ -99,7 +99,6 @@ export default inputRules({
 });
 
 // helpers
-
 export function markInputRule(
   regexp: RegExp,
   markType: MarkType,
@@ -117,4 +116,39 @@ export function markInputRule(
     }
     return tr.addMark(start, end, markType.create(attrs));
   });
+}
+
+export function extendMark(
+  state: EditorState,
+  from: number,
+  to: number,
+  mark: MarkType
+) {
+  if (state.doc.rangeHasMark(from, to, mark)) {
+    let start = from;
+    let end = to;
+    // start
+    if (state.doc.rangeHasMark(start - 1, start, mark)) {
+      while (state.doc.rangeHasMark(start - 1, start, mark)) {
+        start--;
+      }
+    } else {
+      while (!state.doc.rangeHasMark(start, start + 1, mark)) {
+        start++;
+      }
+    }
+    //end
+    if (state.doc.rangeHasMark(end, end + 1, mark)) {
+      while (state.doc.rangeHasMark(end, end + 1, mark)) {
+        end++;
+      }
+    } else {
+      while (!state.doc.rangeHasMark(end - 1, end, mark)) {
+        end--;
+      }
+    }
+
+    return { from: start, to: end };
+  }
+  return null;
 }

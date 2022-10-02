@@ -12,9 +12,16 @@ import { ContextMenu } from "./contextmenu";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import schema from "./schema";
+
+// UX
 import keymap from "./keymap";
 import shortcuts from "./shortcuts";
 
+// Enriched Views
+import { markup } from "./markup";
+import { imageView } from "./imageView";
+
+//Menus
 import { slashmenu } from "./slashmenu";
 
 export default defineComponent({
@@ -34,8 +41,13 @@ export default defineComponent({
     const state = EditorState.create({
       schema: schema,
       plugins: [
+        // UX
         keymap,
         shortcuts,
+        // Enriched Views
+        markup,
+        imageView,
+        // Baubles
         slashmenu((newMenu: ContextMenu | null) => {
           this.menu = newMenu;
         }),

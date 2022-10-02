@@ -413,11 +413,13 @@ const schema = new Schema({
     } as MarkSpec,
 
     // Comment Link
-    comment: {
-      attrs: { comment: { default: "" }, id: { default: null } },
+    markup: {
+      attrs: { comment: { default: "{}" } },
+      inclusive: false,
+      excludes: "",
       parseDOM: [{ tag: "mark" }],
-      toDOM(node) {
-        return ["mark", { ...(node.attrs.id ? { id: node.attrs.id } : {}) }, 0];
+      toDOM() {
+        return ["mark", 0];
       },
     } as MarkSpec,
   },
