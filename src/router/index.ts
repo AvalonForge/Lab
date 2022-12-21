@@ -28,23 +28,25 @@ const routes: Array<RouteRecordRaw> = [
     name: "Multiplayer",
     component: () => import("@/views/Multiplayer.vue"),
   },
+  */
+  {
+      path: "/inline-notes",
+      name: "Inline Notes",
+      component: () => import("@/views/InlineNotes.vue"),
+      meta: {
+          dev: true,
+          timestamp: "6.05.22"
+      },
+  },
   {
     path: "/perlin-noise",
     name: "Perlin Noise",
     component: () => import("@/views/PerlinNoise.vue"),
     meta: {
-      dev: true,
+      dev: false,
+        timestamp: "7.12.22"
     },
   },
-  {
-    path: "/inline-notes",
-    name: "Inline Notes",
-    component: () => import("@/views/InlineNotes.vue"),
-    meta: {
-      dev: true,
-    },
-  },
-  */
   {
     path: "/typescale",
     name: "Typescale",
@@ -82,6 +84,16 @@ const routes: Array<RouteRecordRaw> = [
       dev: true,
       timestamp: "07.25.22",
       hidden: true,
+    },
+  },
+  {
+    path: "/atomic-ux",
+    name: "Atomic UX",
+    component: () => import("@/views/atomic-ux.vue"),
+    meta: {
+      dev: true,
+      timestamp: "10.16.22",
+        hidden: true,
     },
   },
 ];

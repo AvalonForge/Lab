@@ -92,7 +92,7 @@ export function buildKeymap(
   if ((type = schema.nodes["blockquote"])) bind("Ctrl->", wrapIn(type));
   if ((type = schema.nodes["hard-break"])) {
     const br = type,
-      cmd = chainCommands(exitCode, (state, dispatch) => {
+      cmd = chainCommands(exitCode, (state: any, dispatch: any) => {
         if (dispatch)
           dispatch(state.tr.replaceSelectionWith(br.create()).scrollIntoView());
         return true;
