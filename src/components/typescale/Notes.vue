@@ -42,14 +42,16 @@ export default defineComponent({
     },
     methods: {
         setScale: function() {
-            const el = document.querySelector("#typescale-document");
-            el.style.setProperty("--base", `${this.f}px`);
-            el.style.setProperty("--h1", `${this.f * this.r}px`);
-            el.style.setProperty("--h2", `${this.f * Math.pow(this.r, 2/3)}px`);
-            el.style.setProperty("--h3", `${this.f * Math.pow(this.r, 1/3)}px`);
-            el.style.setProperty("--m-top", `${this.f * this.m}px`);
-            el.style.setProperty("--m-bottom", `${this.f * this.m / this.r}px`);
-            el.style.setProperty("--indent", `${this.f * this.indent}px`);
+            const el = document.querySelector("#typescale-document") as any;
+            if(el) {
+                el.style.setProperty("--base", `${this.f}px`);
+                el.style.setProperty("--h1", `${this.f * this.r}px`);
+                el.style.setProperty("--h2", `${this.f * Math.pow(this.r, 2/3)}px`);
+                el.style.setProperty("--h3", `${this.f * Math.pow(this.r, 1/3)}px`);
+                el.style.setProperty("--m-top", `${this.f * this.m}px`);
+                el.style.setProperty("--m-bottom", `${this.f * this.m / this.r}px`);
+                el.style.setProperty("--indent", `${this.f * this.indent}px`);
+            }
         }
     }
 })
