@@ -63,7 +63,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       dev: true,
       timestamp: "07.21.22",
-      live: false,
+      live: true,
     },
   },
   {
@@ -93,7 +93,6 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       dev: true,
       timestamp: "10.16.22",
-      live: true,
         hidden: true,
     },
   },
