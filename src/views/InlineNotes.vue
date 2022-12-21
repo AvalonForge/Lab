@@ -32,7 +32,7 @@ export default defineComponent({
   },
   data() {
     return {
-      editor: null as null | Editor,
+      editor: null as any,
     };
   },
   created: function () {
