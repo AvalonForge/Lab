@@ -1,12 +1,12 @@
 <template lang="html">
-  <article class="font-sans">
-    <h1>Heading 1</h1>
+  <article class="font-sans" id="typescale-document" style="font-size: var(--base); margin-top: var(--m-top); margin-bottom: var(--m-bottom)">
+    <h1 style="font-size: var(--h1)">Heading 1</h1>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam id enim non
       dolor hendrerit tristique a in risus. Sed felis quam, fermentum sed
       porttitor ac, scelerisque rutrum magna. Nam non cursus ligula.
     </p>
-    <h2>Heading 2</h2>
+    <h2 style="font-size: var(--h2)">Heading 2</h2>
     <p>
       Integer fringilla aliquet rhoncus. Phasellus ornare rhoncus vestibulum.
       Aenean dapibus lectus viverra nibh venenatis, non suscipit lacus pharetra.
@@ -18,7 +18,7 @@
       hendrerit, quam non aliquam euismod, tellus mi euismod arcu, quis bibendum
       nisl sem eget neque. Fusce ut ante rutrum, dapibus nisl ut, feugiat purus.
     </p>
-    <h3>Heading 3</h3>
+    <h3 style="font-size: var(--h3)">Heading 3</h3>
     <p>
       Pellentesque consectetur massa sed risus dapibus scelerisque. Ut auctor,
       elit id placerat volutpat, mi metus aliquam purus, sed hendrerit ipsum
@@ -36,7 +36,7 @@
       nulla. Nulla maximus vehicula urna at commodo. Suspendisse eu scelerisque
       massa.
     </p>
-    <blockquote>
+    <blockquote style="padding-left: var(--indent)">
       Nunc a tincidunt metus. Vestibulum ante ipsum primis in faucibus orci
       luctus et ultrices posuere cubilia curae; Aenean interdum urna sodales
       odio pharetra blandit. Fusce eget luctus est. Nunc vel mollis ante.

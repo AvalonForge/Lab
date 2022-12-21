@@ -243,7 +243,7 @@ export default defineComponent({
       },
       mounted: function () {
         if(this.canvas != null) {
-            this.artboard = this.canvas.getContext("2d");
+            this.artboard = (this.canvas as any).getContext("2d");
             this.artboard.fillStyle = "#262626";
         }
       },
@@ -253,7 +253,7 @@ export default defineComponent({
         },
         canvas: function(newCanvas: any) {
             if(this.canvas != null) {
-                this.artboard = this.canvas.getContext("2d");
+                this.artboard = (this.canvas as any).getContext("2d");
                 this.artboard.fillStyle = "#262626";
             }
         }

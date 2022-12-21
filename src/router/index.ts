@@ -30,6 +30,15 @@ const routes: Array<RouteRecordRaw> = [
   },
   */
   {
+      path: "/inline-notes",
+      name: "Inline Notes",
+      component: () => import("@/views/InlineNotes.vue"),
+      meta: {
+          dev: true,
+          timestamp: "6.05.22"
+      },
+  },
+  {
     path: "/perlin-noise",
     name: "Perlin Noise",
     component: () => import("@/views/PerlinNoise.vue"),
@@ -39,30 +48,12 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/inline-notes",
-    name: "Inline Notes",
-    component: () => import("@/views/InlineNotes.vue"),
-    meta: {
-      dev: true,
-    },
-  },
-  {
     path: "/typescale",
     name: "Typescale",
     component: () => import("@/views/Typescale.vue"),
     meta: {
       dev: true,
       timestamp: "07.18.22",
-    },
-  },
-  {
-    path: "/document-ux",
-    name: "Document UX",
-    component: () => import("@/views/document-ux.vue"),
-    meta: {
-      dev: true,
-      timestamp: "09.30.22",
-      live: false,
     },
   },
   {
@@ -103,6 +94,7 @@ const routes: Array<RouteRecordRaw> = [
       dev: true,
       timestamp: "10.16.22",
       live: true,
+        hidden: true,
     },
   },
 ];

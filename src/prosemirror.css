@@ -8,13 +8,15 @@
 section {
   @apply flex-1;
   flex-basis: 15ch;
-  box-shadow: 0px 4px 8px 0px #26262633;
-  /*  border: 2px solid #262626; */
+  /* box-shadow: 0px 4px 8px 0px #26262633; */
+  border: 2px solid #262626;
   border-radius: 5px;
 }
 
 .ProseMirror article {
-  @apply flex flex-wrap gap-4;
+    @apply flex flex-wrap gap-4 mt-before mb-after;
+  padding-left: 18px;
+  padding-right: 18px;
 }
 
 /* Node Selection */

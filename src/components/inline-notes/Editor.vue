@@ -1,14 +1,16 @@
 <template lang="html">
-  <div class="flex gap-50">
-    <editor-content :editor="editor" :style="{ width: '60ch' }" />
-    <div class="">
-      Select some text and press <strong>Alt-A</strong> to wrap it into a note.
+  <main >
+    <article>
+        <editor-content :editor="editor" :style="{ 'max-width': '60ch' }" />
+    </article>
+    <aside>
+        Select some text and press <strong>Alt-A</strong> to wrap it into a note.
       <br />
       Drag one note on top of another to set them next to each other <br />
       or... press:
       <button type="button" @click="wrapNote">wrap into note</button>
-    </div>
-  </div>
+    </aside>
+  </main>
 </template>
 
 <script lang="ts">
