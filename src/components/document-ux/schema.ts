@@ -26,7 +26,7 @@ const schema = new Schema({
     // Header ------------------------------------------------------------------
 
     header: {
-      content: "title style{0, 1} preview{0, 1} description{0,1}",
+      content: "title styling preview{0, 1} description{0,1}",
       group: "header",
       parseDOM: [{ tag: "header" }],
       toDOM() {
@@ -42,6 +42,7 @@ const schema = new Schema({
         type: { default: "text" },
         key: { default: "" },
         display: { default: "" },
+        value: { default: "" },
       },
       parseDOM: [
         {
@@ -67,7 +68,7 @@ const schema = new Schema({
       },
     },
 
-    style: {
+    styling: {
       content: "property*",
       group: "config",
       parseDOM: [{ tag: `dl[data-type="style"]` }],

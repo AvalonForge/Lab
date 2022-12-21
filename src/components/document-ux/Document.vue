@@ -16,6 +16,7 @@ import schema from "./schema";
 // UX
 import keymap from "./keymap";
 import shortcuts from "./shortcuts";
+import styling from "./styling";
 
 // Enriched Views
 import { markup } from "./markup";
@@ -44,6 +45,7 @@ export default defineComponent({
         // UX
         keymap,
         shortcuts,
+        styling,
         // Enriched Views
         markup,
         imageView,
@@ -65,6 +67,6 @@ export default defineComponent({
 </script>
 
 <style lang="css" scoped>
-@import "./prosemirror.css";
-@import "./document.css";
+/* @import "./prosemirror.css"; */
+/* @import "./document.css"; */
 </style>

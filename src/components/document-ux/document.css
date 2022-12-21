@@ -2,6 +2,7 @@
 .ProseMirror {
   font-size: var(--root-frequency);
   font-family: var(--root-font-family);
+  font-weight: var(--font-weight);
 }
 
 p,
@@ -22,6 +23,20 @@ table {
   margin-bottom: calc(var(--leading) / var(--ratio));
 }
 
+/* Heading */
+
+header {
+  max-width: var(--document-width);
+  padding: calc(var(--margin) / var(--ratio)) var(--margin);
+}
+
+header h1 {
+  font-size: calc(
+    var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--root-frequency)
+  );
+}
+
 /* Nodes */
 h1,
 h2,
@@ -31,6 +46,18 @@ h5,
 h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
+}
+
+h1 {
+  font-size: var(--ratio) * var(--ratio) * var(--ratio) * var(--root-frequency);
+}
+
+h2 {
+  font-size: calc(var(--ratio) * var(--ratio) * var(--root-frequency));
+}
+
+h3 {
+  font-size: calc(var(--ratio) * var(--root-frequency));
 }
 
 hr {

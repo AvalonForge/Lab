@@ -1,12 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap");
 
-main {
-  /* Fundemental Variables */
-  --root-frequency: 1em;
-  --ratio: 2;
-  --root-font-family: "Rubik";
-  --leading: 1.259em;
-
+.ProseMirror {
+  /* External --------------------------------------------------------------- */
   /* Colours */
   --paper-color: var(--rlm-card-color, #fafbfb); /* From Realm */
   --type-color: var(--rlm-text-color, #261f1f); /* From Realm */
@@ -14,13 +9,45 @@ main {
   --border-color: var(--rlm-border-color, #d0d7da); /* From Realm */
   --window-color: var(--rlm-window-color, #eceff0); /* From Realm */
 
-  /* Structural */
-  --document-width: 60ch;
+  /* Parameters ------------------------------------------------------------- */
+
+  /* Typography */
+  ---root-frequency: 1em;
+  ---ratio: 1.2599;
+
+  ---font-family: "Rubik";
+  ---font-weight: 500;
 
   /* Headings */
-  --heading-font-family: "Rubik";
-  --heading-font-weight: 700;
+  ---title-font-family: "Rubik";
+  ---heading-font-family: "Rubik";
+  ---heading-font-weight: 700;
 
   /* Code */
-  --code-font-family: "JetBrains Mono", monospace;
+  ---code-font-family: "JetBrains Mono", monospace;
+
+  /* Structure */
+  ---document-width: 60ch;
+  ---margin: 2ch;
+
+  /* Active ----------------------------------------------------------------- */
+  /* Typography */
+  --root-frequency: var(---root-frquency, 1em);
+  --ratio: var(---ratio, 2);
+  --leading: calc(var(--ratio) * var(--root-frequency));
+
+  --font-family: var(---font-family, "Rubik");
+  --font-weight: var(---font-weight, 500);
+
+  /* Headings */
+  --title-font-family: var(---title-font-family, "Rubik");
+  --heading-font-family: var(---heading-font-family, "Rubik");
+  --heading-font-weight: var(---heading-font-weight, 700);
+
+  /* Code */
+  --code-font-family: var(---code-font-family, "JetBrains Mono", monospace);
+
+  /* Structure */
+  --document-width: var(---document-width, 60ch);
+  --margin: var(---margin, 3ch);
 }
